@@ -1,10 +1,55 @@
-import React from 'react';
+25thimport React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Marketplace from './pages/Marketplace';
 import ProductDetail from './pages/ProductDetail';
 import UserDashboard from './pages/UserDashboard';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import mongoose from 'mongoose';
+import PiPaymentService from '../services/piPaymentService';
+import Product from '../models/Product';
+import Order from '../models/Order';
+
+export const processPiTransaction = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // Step 1: Fetch Product Details
+    const product = await Product.findById(req.body.productId).session(session);
+    if (!product) throw new Error('Product not found');
+
+    // Step 2: Deduct Product Quantity
+    product.quantity -= 1;
+    await product.save({ session });
+
+    // Step 3: Create Order
+    const order = new Order({
+      paymentId: req.body.paymentId,
+      productId: product._id,
+      buyer: req.body.buyer, // Assumed this was missing
+      amount: product.price,
+      status: 'pending'
+    });
+    await order.save({ session });
+
+    // Step 4: Process Payment (This should typically be handled by PiPaymentService)
+    await PiPaymentService.processPayment(req.body.paymentId);
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(200).json({ message: 'Transaction processed successfully', orderId: order._id });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    next(error);
+  }
+};
 
 const App: React.FC = () => {
     return (
