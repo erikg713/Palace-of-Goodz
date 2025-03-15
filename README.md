@@ -4,27 +4,26 @@ A Web3-powered decentralized marketplace
 ## PROJECT STRUCTURE ##
 
 ---
-
 palace-of-goodz/
 ├── backend/
 │   ├── config/
-│   │   └── db.js
+│   │   └── db.ts
 │   ├── controllers/
-│   │   ├── productController.js
-│   │   ├── orderController.js
-│   │   └── userController.js
+│   │   ├── productController.ts
+│   │   ├── orderController.ts
+│   │   └── userController.ts
 │   ├── models/
-│   │   ├── Product.js
-│   │   ├── Order.js
-│   │   └── User.js
+│   │   ├── Product.ts
+│   │   ├── Order.ts
+│   │   └── User.ts
 │   ├── routes/
-│   │   ├── productRoutes.js
-│   │   ├── orderRoutes.js
-│   │   └── userRoutes.js
+│   │   ├── productRoutes.ts
+│   │   ├── orderRoutes.ts
+│   │   └── userRoutes.ts
 │   ├── utils/
-│   │   ├── errorHandlers.js
-│   │   └── validators.js
-│   ├── server.js
+│   │   ├── errorHandlers.ts
+│   │   └── validators.ts
+│   ├── server.ts
 │   └── .env
 ├── frontend/
 │   ├── public/
@@ -34,83 +33,12 @@ palace-of-goodz/
 │   │   ├── contexts/
 │   │   ├── hooks/
 │   │   ├── pages/
-│   │   ├── App.jsx
-│   │   └── main.jsx
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── tsconfig.json
 │   ├── package.json
-│   └── vite.config.js
+│   └── vite.config.ts
 └── README.md
-
----
-
-## FRONTEND DEPENDENCIES ##
-
-# npm create vite@latest palace-of-goods -- --template react-ts
-
-
-# npm install @pinetwork-js/sdk @emotion/react @emotion/styled @mui/material wagmi ethers
-
-# mkdir -p src/{components,context,types,utils}
----
-Creating a Web3 marketplace app with Pi Network as the payment system optimized for user experience involves several steps. Below is an outline of what you need to do, along with an example of the project structure and some initial code to get you started.
----
-### Project Outline
-1. **Setup the Project**
-   - Initialize a new project using a modern framework such as React with TypeScript.
-   - Install necessary dependencies.
----
-2. **Frontend Development**
-   - Create a responsive and user-friendly UI.
-   - Implement user authentication and wallet integration using Pi Network.
-   - Develop main features such as product listing, product detail view, and a shopping cart.
----
-3. **Backend Development**
-   - Set up a server to handle product listings, user data, and transactions.
-   - Integrate with the Pi Network for handling payments.
----
-4. **Testing and Optimization**
-   - Ensure the app works seamlessly on different devices.
-   - Optimize for speed and performance.
----
-### Example Project Structure
----
----
-palace-of-goodz/
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   │   ├── Product.tsx
-│   │   ├── ProductList.tsx
-│   │   ├── PaymentModal.tsx
-│   ├── pages/
-│   │   ├── Home.tsx
-│   │   ├── Marketplace.tsx
-│   ├── App.tsx
-│   ├── main.tsx
-│   ├── vite-env.d.ts
-│   └── index.css
-├── package.json
-└── ...
-backend/
-├── routes/
-│   ├── auth.js
-│   ├── products.js
-│   ├── vendors.js
-├── models/
-│   ├── User.js
-│   ├── Product.js
-│   ├── Vendor.js
-├── controllers/
-│   ├── authController.js
-│   ├── productController.js
-│   ├── vendorController.js
-├── middleware/
-│   ├── authenticate.js
-│   └── errorHandler.js
-├── config/
-│   └── db.js
-├── .env
-├── server.js
 ---
 ### Setting Up the Project
 
