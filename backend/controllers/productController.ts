@@ -1,55 +1,30 @@
 import { Request, Response } from 'express';
-import Cart from '../models/Cart';
+import Product from '../models/Product';
 
-export const addToCart = async (req: Request, res: Response) => {
-  const { productId, quantity } = req.body;
-
+export const createProduct = async (req: Request, res: Response) => {
   try {
-    let cart = await Cart.findOne({ userId: req.user.userId });
-    if (!cart) {
-      cart = new Cart({ userId: req.user.userId, products: [{ productId, quantity }] });
-    } else {
-      const productIndex = cart.products.findIndex(p => p.productId.toString() === productId);
-      if (productIndex !== -1) {
-        cart.products[productIndex].quantity += quantity;
-      } else {
-        cart.products.push({ productId, quantity });
-      }
-    }
-    await cart.save();
-    res.status(200).json(cart);
+    const product = new Product(req.body);
+    await product.save();
+    res.status(201).json(product);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to add to cart' });
+    res.status(500).json({ error: 'Failed to create product' });
   }
 };
 
-export const getCart = async (req: Request, res: Response) => {
+export const getProducts = async (req: Request, res: Response) => {
   try {
-    const cart = await Cart.findOne({ userId: req.user.userId }).populate('products.productId');
-    res.status(200).json(cart);
+    const products = await Product.find();
+    res.status(200).json(products);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch cart' });
+    res.status(500).json({ error: 'Failed to fetch products' });
   }
 };
 
-export const updateCartItem = async (req: Request, res: Response) => {
-  const { productId, quantity } = req.body;
-
+export const deleteProduct = async (req: Request, res: Response) => {
   try {
-    const cart = await Cart.findOne({ userId: req.user.userId });
-    if (!cart) {
-      return res.status(404).json({ error: 'Cart not found' });
-    }
-
-    const productIndex = cart.products.findIndex(p => p.productId.toString() === productId);
-    if (productIndex !== -1) {
-      cart.products[productIndex].quantity = quantity;
-      await cart.save();
-      res.status(200).json(cart);
-    } else {
-      res.status(404).json({ error: 'Product not found in cart' });
-    }
+    await Product.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: 'Product deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update cart' });
+    res.status(500).json({ error: 'Failed to delete product' });
   }
 };
