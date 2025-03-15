@@ -23,15 +23,7 @@ src/
 ├── 📁 assets               # Static assets
 │   ├── 📁 fonts           # Custom fonts
 │   ├── 📁 images          # Optimized images
-│   └── 📁 videos          # Compressed videos
-│
-├── 📁 components          # Component library
-│   ├── 📁 atoms           # Basic elements (Buttons, Inputs)
-│   ├── 📁 molecules       # Combined atoms (SearchBar)
-│   ├── 📁 organisms       # Complex UI (ProductCard)
-│   ├── 📁 templates       # Page layouts
-│   └── 📁 web3            # Web3-specific components
-│
+│   └── 📁 videos          # 
 ├── 📁 contexts            # Global state managers
 │   ├── PiNetwork.tsx     # Pi SDK context
 │   ├── Web3Provider.tsx  # Wagmi + Web3Modal
@@ -60,6 +52,26 @@ src/
 ├── 📁 types              # TypeScript definitions
 ├── App.tsx              # Main app router
 └── main.tsx             # Entry point
+src/
+├── 📁 assets               # Static assets
+├── 📁 components           # Reusable UI components
+│   ├── ProductCard.tsx    # Product display and purchase
+│   ├── Navbar.tsx         # Navigation with Pi Wallet connection
+│   └── PaymentModal.tsx   # Payment confirmation modal
+├── 📁 contexts             # Global state
+│   └── PiNetwork.tsx      # Pi SDK and wallet context
+├── 📁 pages                # Route components
+│   ├── Marketplace.tsx    # Main marketplace page
+│   ├── ProductDetail.tsx  # Detailed product view
+│   └── UserDashboard.tsx  # User order history
+├── 📁 services            # API and Pi Network services
+│   ├── pi.ts              # Pi payment service
+│   └── api.ts             # Backend API service
+├── 📁 utils               # Helper functions
+│   ├── formatters.ts      # Data formatting
+│   └── errorHandlers.ts   # Error handling
+├── App.tsx                # Main app router
+└── main.tsx               # Entry point
 
 
 ## BACKEND STRUCTURE ##
