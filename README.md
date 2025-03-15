@@ -1,63 +1,55 @@
 # Palace-of-Goodz
 A Web3-powered decentralized marketplace 
 ---
-## FRONTEND STRUCTURE ##
+## PROJECT STRUCTURE ##
+
 ---
-frontend/
-├── src/
-│   ├── components/
-│   │   ├── Navbar.jsx
-│   │   ├── WalletButton.jsx
-│   │   ├── ProductCard.jsx
-│   │   ├── ProductList.jsx
-│   │   ├── PaymentModal.jsx
-│   │   └── Footer.jsx
-│   ├── pages/
-│   │   ├── Marketplace.jsx
-│   │   ├── ProductDetail.jsx
-│   │   ├── UserDashboard.jsx
-│   │   └── SellerDashboard.jsx
-│   ├── contexts/
-│   │   └── PiContext.jsx
-│   ├── hooks/
-│   │   ├── useProducts.js
-│   │   └── useAuth.js
-│   ├── App.jsx
-│   └── main.jsx
-├── public/
-│   ├── index.html
-│   └── assets/
-├── .env
-└── package.json
+
+palace-of-goodz/
+├── backend/
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── productController.js
+│   │   ├── orderController.js
+│   │   └── userController.js
+│   ├── models/
+│   │   ├── Product.js
+│   │   ├── Order.js
+│   │   └── User.js
+│   ├── routes/
+│   │   ├── productRoutes.js
+│   │   ├── orderRoutes.js
+│   │   └── userRoutes.js
+│   ├── utils/
+│   │   ├── errorHandlers.js
+│   │   └── validators.js
+│   ├── server.js
+│   └── .env
+├── frontend/
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── components/
+│   │   ├── contexts/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│   └── vite.config.js
+└── README.md
+
 ---
-## BACKEND STRUCTURE ##
-backend/
-├── routes/
-│   ├── auth.js
-│   ├── products.js
-│   ├── vendors.js
-├── models/
-│   ├── User.js
-│   ├── Product.js
-│   ├── Vendor.js
-├── controllers/
-│   ├── authController.js
-│   ├── productController.js
-│   ├── vendorController.js
-├── middleware/
-│   ├── authenticate.js
-│   └── errorHandler.js
-├── config/
-│   └── db.js
-├── .env
-├── server.js
----
+
 ## FRONTEND DEPENDENCIES ##
-npm create vite@latest palace-of-goods -- --template react-ts
-cd palace-of-goods
-npm install @pinetwork-js/sdk @emotion/react @emotion/styled @mui/material wagmi ethers
-npm install
-mkdir -p src/{components,context,types,utils}
+
+# npm create vite@latest palace-of-goods -- --template react-ts
+
+
+# npm install @pinetwork-js/sdk @emotion/react @emotion/styled @mui/material wagmi ethers
+
+# mkdir -p src/{components,context,types,utils}
 ---
 Creating a Web3 marketplace app with Pi Network as the payment system optimized for user experience involves several steps. Below is an outline of what you need to do, along with an example of the project structure and some initial code to get you started.
 ---
