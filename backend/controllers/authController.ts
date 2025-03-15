@@ -3,14 +3,19 @@ import User from '../models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-// Register User
-export const registerUser = async (req: Request, res: Response) => {
+// Register a new user
+export const registerUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { piUsername, walletAddress, password } = req.body;
+        if (!piUsername || !walletAddress || !password) {
+            res.status(400).json({ error: 'Missing required fields: piUsername, walletAddress, and password.' });
+            return;
+        }
 
         const existingUser = await User.findOne({ walletAddress });
         if (existingUser) {
-            return res.status(400).json({ error: 'User already exists.' });
+            res.status(400).json({ error: 'User already exists.' });
+            return;
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
@@ -19,30 +24,34 @@ export const registerUser = async (req: Request, res: Response) => {
 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET as string, { expiresIn: '1d' });
         res.status(201).json({ token, userId: user._id });
-    } catch (err) {
+    } catch (err: any) {
         res.status(500).json({ error: 'Failed to register user.', details: err.message });
     }
 };
 
-// Login User
-export const loginUser = async (req: Request, res: Response) => {
+// Log in an existing user
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { walletAddress, password } = req.body;
+        if (!walletAddress || !password) {
+            res.status(400).json({ error: 'Missing walletAddress or password.' });
+            return;
+        }
         const user = await User.findOne({ walletAddress });
-
         if (!user) {
-            return res.status(400).json({ error: 'Invalid Wallet Address or Password.' });
+            res.status(400).json({ error: 'Invalid wallet address or password.' });
+            return;
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
-
         if (!isMatch) {
-            return res.status(400).json({ error: 'Invalid Wallet Address or Password.' });
+            res.status(400).json({ error: 'Invalid wallet address or password.' });
+            return;
         }
 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET as string, { expiresIn: '1d' });
         res.status(200).json({ token, userId: user._id });
-    } catch (err) {
+    } catch (err: any) {
         res.status(500).json({ error: 'Failed to login user.', details: err.message });
     }
 };
