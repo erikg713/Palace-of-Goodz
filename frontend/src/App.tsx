@@ -19,8 +19,5 @@ const App: React.FC = () => {
         </Router>
     );
 };
-Python
-header = {
-    'Authorization': "Key YOUR-API-KEY"
-}
+
 export default App;
