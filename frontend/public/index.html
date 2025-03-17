@@ -1,1 +1,24 @@
 
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script> Pi.init({ version: "2.0", sandbox: true }) </script>
+<script> 
+    // Authenticate the user, and get permission to request payments from them:
+    const scopes = ['payments'];
+
+    // Read more about this callback in the SDK reference:
+    function onIncompletePaymentFound(payment) { 
+        paymentId = payment.identifier
+        txid = payment.transaction.txid
+        $.post('/payment/complete',
+                {
+                    paymentId: paymentId,
+                    txid: txid,
+                    debug: 'cancel'
+                }
+            )
+    };
+
+    Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
+console.log('woot!');
+    }).catch(function(error) {
+      console.error(error);
