@@ -31,3 +31,8 @@ PalaceOfGoods/frontend
 │── package.json
 │── tsconfig.json
 │── README.md
+
+
+npx create-react-app palace-of-goods --template typescript
+cd palace-of-goods
+npm install react-router-dom redux @reduxjs/toolkit styled-components
