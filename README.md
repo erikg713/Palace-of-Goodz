@@ -36,3 +36,10 @@ PalaceOfGoods/frontend
 npx create-react-app palace-of-goods --template typescript
 cd palace-of-goods
 npm install react-router-dom redux @reduxjs/toolkit styled-components
+
+# Create Vite project with React + TypeScript template
+npm create vite@latest palace-of-goods --template react-ts
+cd palace-of-goods
+
+# Install dependencies
+npm install react-router-dom @reduxjs/toolkit react-redux axios styled-components
