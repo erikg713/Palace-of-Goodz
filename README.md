@@ -92,45 +92,7 @@ const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
   name: {
-    type: String,
-    required: true
-  },
-  description: {
-    type: String,
-    required: true
-  },
-  price: {
-    type: Number,
-    required: true
-  },
-  image: {
-    type: String,
-    required: true
-  }
-});
-
-module.exports = mongoose.model('Product', productSchema);
-```
-
-#### Backend: Server Setup (`server.js`)
-```javascript name=backend/server.js
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-
-dotenv.config();
-
-const app = express();
-const PORT = process.env.PORT || 5000;
-
-app.use(express.json());
-
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
-  console.log('MongoDB connected');
-}).catch(err => {
+    t.js.catch(err => {
   console.error(err);
 });
 
