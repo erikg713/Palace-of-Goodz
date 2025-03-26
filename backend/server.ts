@@ -9,7 +9,18 @@ import authRoutes from './routes/authRoutes';
 import { authMiddleware } from './middlewares/authMiddleware';
 import { errorMiddleware } from './middlewares/errorMiddleware';
 import dotenv from 'dotenv';
+import express from "express";
+import paymentRoutes from "./routes/paymentRoutes";
+import dotenv from "dotenv";
 
+dotenv.config();
+
+const app = express();
+app.use(express.json());
+app.use("/payments", paymentRoutes);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 dotenv.config();
 
 const app = express();
