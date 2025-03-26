@@ -58,3 +58,15 @@ router.post('/complete', authMiddleware, async (req, res) => {
 });
 
 export default router;
+import { Router } from "express";
+import { createOrder, getOrderById, getUserOrders, updateOrderStatus } from "../controllers/orderController";
+import { authMiddleware } from "../middlewares/authMiddleware";
+
+const router = Router();
+
+router.post("/", authMiddleware, createOrder);
+router.get("/:id", authMiddleware, getOrderById);
+router.get("/", authMiddleware, getUserOrders);
+router.put("/:id/status", authMiddleware, updateOrderStatus);
+
+export default router;
