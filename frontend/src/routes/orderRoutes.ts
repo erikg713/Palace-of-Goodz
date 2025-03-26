@@ -65,3 +65,24 @@ router.post("/complete", authMiddleware, async (req, res) => {
 });
 
 export default router;
+import { Router } from "express";
+import { 
+  createOrder, 
+  getOrderById, 
+  getUserOrders, 
+  updateOrderStatus, 
+  completePiOrder 
+} from "../controllers/orderController";
+import { authMiddleware } from "../middlewares/authMiddleware";
+
+const router = Router();
+
+router.post("/", authMiddleware, createOrder);
+router.get("/:id", authMiddleware, getOrderById);
+router.get("/", authMiddleware, getUserOrders);
+router.put("/:id/status", authMiddleware, updateOrderStatus);
+
+// ✅ Pi Payment Completion Route
+router.post("/complete", authMiddleware, completePiOrder);
+
+export default router;
