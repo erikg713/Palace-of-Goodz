@@ -1,14 +1,21 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import { authMiddleware } from '../middlewares/auth';
-import Order from '../models/Order';
-import Product from '../models/Product';
-import piPayment from '../services/piPayment';
+import express from "express";
+import mongoose from "mongoose";
+import { authMiddleware } from "../middlewares/authMiddleware";
+import Order from "../models/Order";
+import Product from "../models/Product";
+import piPayment from "../services/piPayment";
+import { createOrder, getOrderById, getUserOrders, updateOrderStatus } from "../controllers/orderController";
 
 const router = express.Router();
 
-// Complete Pi payment
-router.post('/complete', authMiddleware, async (req, res) => {
+// Standard Order Routes
+router.post("/", authMiddleware, createOrder);
+router.get("/:id", authMiddleware, getOrderById);
+router.get("/", authMiddleware, getUserOrders);
+router.put("/:id/status", authMiddleware, updateOrderStatus);
+
+// ✅ Pi Payment Order Completion
+router.post("/complete", authMiddleware, async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -16,34 +23,34 @@ router.post('/complete', authMiddleware, async (req, res) => {
     const { paymentId, txid } = req.body;
     const userId = req.user.userId;
 
-    // 1. Verify payment with Pi Network
+    // 1️⃣ Verify payment with Pi Network
     const payment = await piPayment.getPayment(paymentId);
-    if (payment.status !== 'approved') {
-      throw new Error('Payment not approved');
+    if (payment.status !== "approved") {
+      throw new Error("Payment not approved");
     }
 
-    // 2. Get product from metadata
+    // 2️⃣ Retrieve product from metadata
     const product = await Product.findById(payment.metadata.productId).session(session);
     if (!product || product.quantity < 1) {
-      throw new Error('Product unavailable');
+      throw new Error("Product unavailable");
     }
 
-    // 3. Update product quantity
+    // 3️⃣ Update product stock
     product.quantity -= 1;
     await product.save({ session });
 
-    // 4. Create order
+    // 4️⃣ Create an order
     const order = new Order({
       piPaymentId: paymentId,
       product: product._id,
       buyer: userId,
-      status: 'completed',
-      piTransactionId: txid
+      status: "completed",
+      piTransactionId: txid,
     });
 
     await order.save({ session });
 
-    // 5. Finalize with Pi Network
+    // 5️⃣ Finalize payment with Pi Network
     await piPayment.completePayment(paymentId);
 
     await session.commitTransaction();
@@ -56,17 +63,5 @@ router.post('/complete', authMiddleware, async (req, res) => {
     session.endSession();
   }
 });
-
-export default router;
-import { Router } from "express";
-import { createOrder, getOrderById, getUserOrders, updateOrderStatus } from "../controllers/orderController";
-import { authMiddleware } from "../middlewares/authMiddleware";
-
-const router = Router();
-
-router.post("/", authMiddleware, createOrder);
-router.get("/:id", authMiddleware, getOrderById);
-router.get("/", authMiddleware, getUserOrders);
-router.put("/:id/status", authMiddleware, updateOrderStatus);
 
 export default router;
