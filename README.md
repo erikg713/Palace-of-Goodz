@@ -23,7 +23,7 @@ A Web3-powered decentralized marketplace using Node.js, Express, and React (Type
 
 ## Description
 
-Palace of Goods is a decentralized marketplace that allows users to buy and sell goods using Pi Network cryptocurrency. It features secure transactions with blockchain integration, a Node.js & Express.js backend, and a React (TypeScript) frontend.
+Palace of Goods is a decentralized marketplace that allows users to buy and sell goods using Pi Network cryptocurrency. It features secure transactions with blockchain integration, a Node.js & Express backend, and a React frontend.
 
 ---
 
@@ -43,60 +43,44 @@ Palace of Goods is a decentralized marketplace that allows users to buy and sell
 
 ### Backend (Node.js / Express.js)
 
-- Express.js – Lightweight and scalable backend framework
-- PostgreSQL – Relational database for scalable data storage
-- JWT (jsonwebtoken) – Secure authentication system
-- Multer & Cloudinary – Image uploads & cloud storage
-- Docker – Containerized development & production
-- PM2 – Process management for production
+- **Express.js** – Lightweight and scalable backend framework
+- **PostgreSQL** – Relational database for scalable data storage
+- **JWT (jsonwebtoken)** – Secure authentication system
+- **Multer & Cloudinary** – Image uploads & cloud storage
+- **Docker** – Containerized development & production
+- **PM2** – Process management for production
 
 ### Frontend (React.js/Next.js with TypeScript)
 
-- React.js (TypeScript) – Type-safe and scalable UI
-- Redux Toolkit (Future) – State management for better UX
-- Material-UI – Modern component-based UI framework
-/palace-of-goods
-│── /lib
-│   ├── mongodb.ts   <-- Database connection
-│── /models
-│   ├── User.ts      <-- Mongoose User schema
-│── /pages
-│   ├── /api
-│   │   ├── /auth
-│   │   │   ├── register.ts   <-- User Registration API
-│   │   │   ├── login.ts      <-- User Login API
-│   │   │   ├── web3-login.ts <-- Web3 Login API
-│   ├── /auth
-│   │   ├── login.tsx         <-- Login Page
-│   │   ├── register.tsx      <-- Register Page
-│── /components
-│   ├── AuthForm.tsx  <-- Authentication Form Component
-│── /styles
-│── .env.local
-│── next.config.js
-│── package.json
-│── tsconfig.json
-
+- **React.js (TypeScript)** – Type-safe and scalable UI
+- **Redux Toolkit (Future)** – State management for better UX
+- **Material-UI** – Modern component-based UI framework
 
 ### Blockchain & Web3
 
-- Pi Network SDK – Pi-based cryptocurrency payments
-- Ethereum, Bitcoin, Polygon (Future) – Multi-chain transaction support
+- **Pi Network SDK** – Pi-based cryptocurrency payments
+- **Ethereum, Bitcoin, Polygon (Future)** – Multi-chain transaction support
 
 ---
 
 ## Getting Started
-npx create-next-app@latest palace-of-goods --typescript
-cd palace-of-goods
 
-### Prerequisites
+1. Create a new Next.js app with TypeScript:
+   ```bash
+   npx create-next-app@latest palace-of-goods --typescript
+   cd palace-of-goods
+   ```
 
-Ensure you have the following installed on your system:
+2. Ensure you have the following installed on your system:
+   - Node.js (16+) & npm/yarn
+   - MongoDB
+   - Docker (Optional for deployment)
 
-- Node.js (16+) & npm/yarn
-- MongoDB
-- Docker (Optional for deployment)
-npm install mongoose next-auth bcryptjs jsonwebtoken ethers @types/jsonwebtoken @types/bcryptjs
+3. Install necessary dependencies:
+   ```bash
+   npm install mongoose next-auth bcryptjs jsonwebtoken ethers @types/jsonwebtoken @types/bcryptjs
+   ```
+
 ---
 
 ## Installation
@@ -110,46 +94,37 @@ cd palace-of-goods
 
 ### Backend Setup (Node.js + Express API)
 
-Install Dependencies:
+1. Install dependencies:
+   ```bash
+   cd server
+   npm install
+   npm install node-cron @pinetwork-js/sdk web3 dotenv express fs moment
+   ```
 
-```bash
-cd server
-npm install
-npm install node-cron
-npm install @pinetwork-js/sdk
-npm install web3
-npm install dotenv express fs moment
-npx terser js/main.js -o js/main.min.js --compress --mangle
-npx clean-css -o css/styles.min.css css/styles.css
-npm run migrate  # Apply database migrations
-npm run dev      # Start development server
-```
-
-Backend will be running at http://127.0.0.1:5000.
+2. Apply database migrations and start the development server:
+   ```bash
+   npm run migrate  # Apply database migrations
+   npm run dev      # Start development server
+   ```
 
 ### Frontend Setup (React with TypeScript)
 
-Install Dependencies:
+1. Install dependencies:
+   ```bash
+   cd client
+   npm install react-router-dom axios react-query
+   ```
 
-```bash
-cd client
-npm install react-router-dom
-npm install axios react-query
-node sitemap.ts
-npm start
-```
-
-Frontend will be running at http://localhost:3000.
+2. Start the frontend server:
+   ```bash
+   npm start
+   ```
 
 ---
 
 ## Environment Variables
 
-Create a `.env` file in the server directory and add:
-
-```env
-# Add your environment variables here
-```
+Create a `.env` file in the server directory and add the required environment variables.
 
 ---
 
@@ -198,6 +173,8 @@ docker run -d -p 5000:5000 --env-file .env palace-of-goods-server
 # Add your Docker Compose instructions here
 ```
 
+---
+
 ## Future Roadmap
 
 - 🔹 React Native Mobile App for Android & iOS
@@ -214,23 +191,17 @@ We welcome contributions! Follow these steps:
 
 1. Fork the repo
 2. Create a feature branch:
-
-```bash
-git checkout -b feature-name
-```
-
+   ```bash
+   git checkout -b feature-name
+   ```
 3. Commit changes:
-
-```bash
-git commit -m "Added new feature"
-```
-
+   ```bash
+   git commit -m "Added new feature"
+   ```
 4. Push to your branch:
-
-```bash
-git push origin feature-name
-```
-
+   ```bash
+   git push origin feature-name
+   ```
 5. Submit a pull request
 
 ---
@@ -243,53 +214,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 🚀 Palace of Goods - The Future of Decentralized Commerce!
 ```
-
-This improved version provides clear sections, step-by-step instructions, and better navigation.
-
-
-
-PalaceOfGoods/frontend
-│── public/
-│   ├── index.html
-│   ├── assets/ (images, icons)
-│── src/
-│   ├── components/
-│   │   ├── Header.tsx
-│   │   ├── Sidebar.tsx
-│   │   ├── Dashboard.tsx
-│   │   ├── Inventory.tsx
-│   │   ├── Transactions.tsx
-│   │   ├── Analytics.tsx
-│   │   ├── Storefront.tsx
-│   ├── context/
-│   │   ├── UserContext.tsx
-│   │   ├── PaymentContext.tsx
-│   ├── redux/
-│   │   ├── store.ts
-│   │   ├── slices/
-│   ├── pages/
-│   │   ├── Home.tsx
-│   │   ├── Marketplace.tsx
-│   │   ├── Checkout.tsx
-│   │   ├── Profile.tsx
-│   ├── App.tsx
-│   ├── index.tsx
-│   ├── styles/
-│   │   ├── global.css
-│   │   ├── theme.css
-│   ├── service-worker.ts
-│── package.json
-│── tsconfig.json
-│── README.md
-
-
-npx create-react-app palace-of-goods --template typescript
-cd palace-of-goods
-npm install react-router-dom redux @reduxjs/toolkit styled-components
-
-# Create Vite project with React + TypeScript template
-npm create vite@latest palace-of-goods --template react-ts
-cd palace-of-goods
-
-# Install dependencies
-npm install react-router-dom @reduxjs/toolkit react-redux axios styled-components
