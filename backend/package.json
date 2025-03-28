@@ -78,6 +78,15 @@
     "typescript": "^5.1.6"
   }
 }
+"devDependencies": {
+  ...
+  "cross-env": "^7.0.3"
+},
+"scripts": {
+  ...
+  "dev": "cross-env NODE_ENV=development ts-node src/server.ts",
+  "start": "cross-env NODE_ENV=production node dist/server.js"
+}
 "author": "Erik G",
 "contributors": [
   {
