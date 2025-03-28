@@ -119,7 +119,7 @@ cd palace-of-goods
    ```bash
    npm start
    ```
-
+npm install sequelize pg pg-hstore
 ---
 
 ## Environment Variables
