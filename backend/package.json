@@ -24,6 +24,42 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+  ...
+  "prettier": "^2.8.0"
+},
+"scripts": {
+  ...
+  "format": "prettier --write ."
+}
+  "devDependencies": {
+  ...
+  "nodemon": "^2.0.20"
+},
+"scripts": {
+  ...
+  "dev": "nodemon src/server.ts"
+}
+  "devDependencies": {
+  ...
+  "husky": "^8.0.0",
+  "lint-staged": "^13.0.0"
+},
+"scripts": {
+  ...
+  "prepare": "husky install"
+},
+"husky": {
+  "hooks": {
+    "pre-commit": "lint-staged"
+  }
+},
+"lint-staged": {
+  "*.ts": [
+    "eslint --fix",
+    "prettier --write"
+  ]
+}
+  "devDependencies": {
     "@types/axios": "^1.0.5",
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.12",
@@ -42,3 +78,14 @@
     "typescript": "^5.1.6"
   }
 }
+"author": "Erik G",
+"contributors": [
+  {
+    "name": "Contributor Name",
+    "email": "contributor@example.com"
+  }
+],
+"repository": {
+  "type": "git",
+  "url": "git+https://github.com/erikg713/Palace-of-Goodz.git"
+},
