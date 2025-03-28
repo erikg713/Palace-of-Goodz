@@ -1,13 +1,25 @@
-
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 // Load environment variables from .env file
 dotenv.config();
 
-const connectDB = async () => {
+// Validate required environment variables
+const mongoUri = process.env.MONGO_URI;
+const dbConnectionString = process.env.DB_CONNECTION_STRING;
+
+if (!mongoUri) {
+  throw new Error('Missing required environment variable: MONGO_URI');
+}
+
+if (!dbConnectionString) {
+  throw new Error('Missing required environment variable: DB_CONNECTION_STRING');
+}
+
+// MongoDB Connection
+const connectMongoDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI as string, {
+    await mongoose.connect(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -18,16 +30,12 @@ const connectDB = async () => {
   }
 };
 
-// Exports the connection function for use
-export default connectDB;
-// config/db.js
+// PostgreSQL Connection
 import { Pool } from 'pg';
-import dotenv from 'dotenv';
 
-dotenv.config();
-
+// Create a new pool instance
 const pool = new Pool({
-  connectionString: process.env.DB_CONNECTION_STRING,
+  connectionString: dbConnectionString,
 });
 
 pool.on('error', (err, client) => {
@@ -35,4 +43,5 @@ pool.on('error', (err, client) => {
   process.exit(-1);
 });
 
-export default pool;
+// Export both connection functions for use
+export { connectMongoDB, pool };
