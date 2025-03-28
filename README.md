@@ -73,7 +73,7 @@ Palace of Goods is a decentralized marketplace that allows users to buy and sell
 
 2. Ensure you have the following installed on your system:
    - Node.js (16+) & npm/yarn
-   - MongoDB
+   - Postgresql (18+)
    - Docker (Optional for deployment)
 
 3. Install necessary dependencies:
