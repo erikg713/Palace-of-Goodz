@@ -4,9 +4,6 @@ import dotenv from "dotenv";
 import connectDB from "./config/db";
 import pool from '../config/db.js';
 
-const query = 'SELECT * FROM payments;';
-const result = await pool.query(query);
-
 // Import Routes
 import productRoutes from "./routes/productRoutes";
 import orderRoutes from "./routes/orderRoutes";
@@ -47,4 +44,12 @@ const PORT = process.env.PORT || 5000;
 // Start the Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+});
+
+// Ensure to handle async/await properly
+const query = 'SELECT * FROM payments;';
+pool.query(query).then(result => {
+  console.log(result);
+}).catch(err => {
+  console.error('Error executing query', err.stack);
 });
