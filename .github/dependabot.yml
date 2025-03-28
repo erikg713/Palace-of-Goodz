@@ -5,7 +5,17 @@
 
 version: 2
 updates:
-  - package-ecosystem: "" # See documentation for possible values
+  - package-ecosystem: "npm" # Specify your package ecosystem
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+      time: "02:00" # Time of day to check for updates
+      timezone: "UTC" # Timezone for the time parameter
+    open-pull-requests-limit: 5 # Limit the number of open PRs
+    rebase-strategy: "auto" # Rebase strategy for the updates
+    commit-message:
+      prefix: "deps" # Prefix for commit messages
+      include: "scope" # Include scope in commit messages
+    ignore:
+      - dependency-name: ".env" # Example to ignore specific packages
+        versions: ["1.x"] # Example to ignore specific versions
