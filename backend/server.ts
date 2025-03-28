@@ -16,7 +16,8 @@ import paymentRoutes from "./routes/paymentRoutes";
 import { authMiddleware } from "./middlewares/authMiddleware";
 import { errorMiddleware } from "./middlewares/errorMiddleware";
 
-dotenv.config(); // Load environment variables
+// Load environment variables
+dotenv.config();
 
 const app = express();
 
@@ -38,7 +39,7 @@ app.use("/api/payments", paymentRoutes); // Payment routes
 // Error Handling Middleware
 app.use(errorMiddleware);
 
-// Define PORT (avoid re-declaring `PORT`)
+// Define PORT
 const PORT = process.env.PORT || 5000;
 
 // Start the Server
@@ -47,9 +48,14 @@ app.listen(PORT, () => {
 });
 
 // Ensure to handle async/await properly
-const query = 'SELECT * FROM payments;';
-pool.query(query).then(result => {
-  console.log(result);
-}).catch(err => {
-  console.error('Error executing query', err.stack);
-});
+const executeQuery = async () => {
+  const query = 'SELECT * FROM payments;';
+  try {
+    const result = await pool.query(query);
+    console.log(result.rows);
+  } catch (err) {
+    console.error('Error executing query', err.stack);
+  }
+};
+
+executeQuery();
