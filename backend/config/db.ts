@@ -20,3 +20,19 @@ const connectDB = async () => {
 
 // Exports the connection function for use
 export default connectDB;
+// config/db.js
+import { Pool } from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const pool = new Pool({
+  connectionString: process.env.DB_CONNECTION_STRING,
+});
+
+pool.on('error', (err, client) => {
+  console.error('Unexpected error on idle PostgreSQL client', err);
+  process.exit(-1);
+});
+
+export default pool;
