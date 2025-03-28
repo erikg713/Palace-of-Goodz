@@ -73,12 +73,12 @@ Palace of Goods is a decentralized marketplace that allows users to buy and sell
 
 2. Ensure you have the following installed on your system:
    - Node.js (16+) & npm/yarn
-   - Postgresql (18+)
+   - Postgresql (17+)
    - Docker (Optional for deployment)
 
 3. Install necessary dependencies:
    ```bash
-   npm install mongoose next-auth bcryptjs jsonwebtoken ethers @types/jsonwebtoken @types/bcryptjs
+   npm install next-auth bcryptjs jsonwebtoken web3js @types/jsonwebtoken @types/bcryptjs @types/web3js
    ```
 
 ---
@@ -112,7 +112,7 @@ cd palace-of-goods
 1. Install dependencies:
    ```bash
    cd client
-   npm install react-router-dom axios react-query
+   npm install react-router-dom axios@latest react-query
    ```
 
 2. Start the frontend server:
