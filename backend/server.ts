@@ -48,13 +48,21 @@ app.listen(PORT, () => {
 });
 
 // Ensure to handle async/await properly
+import { Pool } from 'pg'; // Assuming pg is the PostgreSQL client library being used
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL, // Use environment variables for configuration
+});
+
 const executeQuery = async () => {
   const query = 'SELECT * FROM payments;';
   try {
     const result = await pool.query(query);
     console.log(result.rows);
   } catch (err) {
-    console.error('Error executing query', err.stack);
+    // Use a logging library for better error management
+    console.error('Error executing query', err);
+    // Optionally, you can rethrow or handle the error depending on the context
   }
 };
 
