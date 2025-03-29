@@ -9,6 +9,35 @@
     <meta property="og:description" content="A Web3-powered decentralized marketplace">
     <meta property="og:url" content="https://yourdomain.com">
     <meta property="og:type" content="website">
+    <meta name="keywords" content="Web3, decentralized, marketplace, blockchain, crypto">
+    <meta name="author" content="Your Name or Company">
+    <link rel="icon" href="path/to/favicon.ico" type="image/x-icon">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://sdk.minepi.com;">
+</head>
+<body>
+    <header role="banner">
+        <!-- Your header content -->
+    </header>
+    <main role="main">
+        <!-- Page content -->
+    </main>
+    <footer role="contentinfo">
+        <!-- Your footer content -->
+    </footer>
+    <script src="https://sdk.minepi.com/pi-sdk.js" async></script>
+    <script src="path/to/your/script.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palace of Goodz</title>
+    <meta name="description" content="A Web3-powered decentralized marketplace">
+    <meta property="og:title" content="Palace of Goodz">
+    <meta property="og:description" content="A Web3-powered decentralized marketplace">
+    <meta property="og:url" content="https://yourdomain.com">
+    <meta property="og:type" content="website">
 </head>
 <body>
     <!-- Page content -->
@@ -39,4 +68,53 @@
         });
     </script>
 </body>
-</html>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palace of Goodz</title>
+</head>
+<body>
+    <!-- Page content -->
+
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script> 
+        Pi.init({ version: "2.0", sandbox: true });
+
+        // Authenticate the user, and get permission to request payments from them:
+        const scopes = ['payments'];
+
+        // Read more about this callback in the SDK reference:
+        function onIncompletePaymentFound(payment) { 
+            paymentId = payment.identifier;
+            txid = payment.transaction.txid;
+            $.post('/payment/complete', {
+                        paymentId: paymentId,
+                        txid: txid,
+                        debug: 'cancel'
+                    }
+                );
+        };
+
+        Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
+            console.log('woot!');
+        }).catch(function(error) {
+            console.error(error);
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palace of Goodz</title>
+</head>
+<body>
+    <!-- Existing content goes here -->
+</body>
+</html>1. createPayment: Your app's frontend creates the payment. The Payment Flow UI opens, but cannot be interacted with until the payment is approved by your server.
+2. onReadyForServerApproval: The JS SDK has obtained the payment identifier (PaymentID) and is passing it to your app for Server-Side approval.
+Your app's frontend sends the PaymentID to your app's server. This implementation is your responsibility.
+3. Server-Side Approval: Your app's server approves the payment with Pi Servers through the /approve API call. This enables the Pioneer to submit the blockchain transaction (as explained in Phase II below).
