@@ -1,1 +1,13 @@
+User-agent: *
+Disallow: /private/
+Allow: /public/
 
+User-agent: BadBot
+Disallow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: *
+Disallow:
+Sitemap: https://www.yoursite.com/sitemap.xml
