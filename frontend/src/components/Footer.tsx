@@ -1,12 +1,20 @@
 import React from 'react';
-import styles from './Footer.module.css';
+
+const footerStyle = {
+    textAlign: 'center' as 'center',
+    padding: '1rem',
+    backgroundColor: '#1a1a1a',
+    color: '#fff',
+    marginTop: '2rem'
+};
 
 const Footer: React.FC = () => {
     return (
-        <footer className={styles.footer} aria-label="Footer">
-            <p>&copy; 2025 Palace-of-Goodz. All rights reserved.</p>
+        <footer style={footerStyle}>
+            {/* Add your footer content here */}
+            <p>© 2025 Palace of Goodz. All rights reserved.</p>
         </footer>
     );
-};
+}
 
 export default Footer;
