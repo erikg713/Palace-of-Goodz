@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import Order from "../models/Order";
 import Product from "../models/Product";
 import piPayment from "../services/piPayment";
-import { validateCreateOrder } from "../validators/orderValidators"; // assuming a validation function
+import { validateCreateOrder } from "../validators/orderValidators";
 
 /**
  * Create a new order
@@ -35,6 +35,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
     return res.status(201).json(order);
   } catch (error) {
+    console.error("Error creating order:", error); // Log the error
     next(error); // Pass error to centralized error handler
   }
 };
