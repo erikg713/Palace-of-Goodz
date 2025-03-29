@@ -1,22 +1,5 @@
 import { getPiPayment, PiPayment } from "../services/piService";
 
-export const verifyPiTransaction = async (paymentId: string): Promise<boolean> => {
-  try {
-    const payment: PiPayment | null = await getPiPayment(paymentId);
-
-    if (!payment || typeof payment.status !== "string") {
-      console.error("⚠️ Invalid response from Pi API");
-      return false;
-    }
-
-    return payment.status.toUpperCase() === "COMPLETED";
-  } catch (error) {
-    console.error("⚠️ Error verifying Pi transaction:", error);
-    return false;
-  }
-};
-import { getPiPayment, PiPayment } from "../services/piService";
-
 /**
  * Verifies the status of a Pi transaction.
  * 
@@ -37,11 +20,12 @@ export const verifyPiTransaction = async (paymentId: string): Promise<boolean> =
     // Check if the payment status is completed
     return payment.status.toUpperCase() === "COMPLETED";
   } catch (error) {
-    console.error("⚠️ Error verifying Pi transaction:", error);
+    console.error("⚠️ Error verifying Pi transaction:", error.message);
     return false;
   }
 };
 
+// Testing the verifyPiTransaction function
 import { verifyPiTransaction } from './verifyTransaction';
 import { getPiPayment } from '../services/piService';
 
