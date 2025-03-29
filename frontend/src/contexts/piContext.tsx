@@ -1,8 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, FC } from 'react';
 
 // Define the shape of the context data
 interface PiContextType {
-  // Add your context state and actions here
   value: number;
   setValue: (value: number) => void;
 }
@@ -11,7 +10,7 @@ interface PiContextType {
 const PiContext = createContext<PiContextType | undefined>(undefined);
 
 // Provider component
-const PiProvider = ({ children }: { children: ReactNode }) => {
+const PiProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [value, setValue] = useState<number>(0);
 
   return (
@@ -22,7 +21,7 @@ const PiProvider = ({ children }: { children: ReactNode }) => {
 };
 
 // Custom hook to use the PiContext
-const usePiContext = () => {
+const usePiContext = (): PiContextType => {
   const context = useContext(PiContext);
   if (context === undefined) {
     throw new Error('usePiContext must be used within a PiProvider');
