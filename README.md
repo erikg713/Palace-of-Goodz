@@ -190,25 +190,42 @@ docker run -d -p 5000:5000 --env-file .env palace-of-goods-server
 We welcome contributions! Follow these steps:
 
 1. Fork the repo
-2. Create a feature branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit changes:
-   ```bash
-   git commit -m "Added new feature"
-   ```
-4. Push to your branch:
-   ```bash
-   git push origin feature-name
-   ```
-5. Submit a pull request
+2. Create a feature Title and Description:
 
+Ensure the title is clear and descriptive.
+Provide a brief description of your project, including its purpose and key features.
+Table of Contents:
+
+Add a table of contents if the README is lengthy. This helps users navigate the document easily.
+Installation Instructions:
+
+Provide clear and concise installation instructions. Include prerequisites, dependencies, and step-by-step installation process.
+Usage:
+
+Include examples of how to use the project. This could be command examples, screenshots, or code snippets.
+Contributing:
+
+Explain how other developers can contribute to the project. Include guidelines for submitting issues and pull requests.
+License:
+
+Clearly state the project's license. This informs users how they can use and distribute the project.
+Badges:
+
+Add badges for build status, coverage, license, etc. This provides quick insights into the project at a glance.
+Contact Information:
+
+Provide contact information or links to social media, website, or documentation for further assistance.
+Acknowledgements:
+
+Acknowledge any contributors, libraries, or resources that helped in the development of the project.1. createPayment: Your app's frontend creates the payment. The Payment Flow UI opens, but cannot be interacted with until the payment is approved by your server.
+2. onReadyForServerApproval: The JS SDK has obtained the payment identifier (PaymentID) and is passing it to your app for Server-Side approval.
+Your app's frontend sends the PaymentID to your app's server. This implementation is your responsibility.
+3. Server-Side Approval: Your app's server approves the payment with Pi Servers through the /approve API call. This enables the Pioneer to submit the blockchain transaction (as explained in Phase II below).
 ---
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the Pi Network License PIOS. See the [LICENSE](LICENSE) file for details.
 
 ---
 
