@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 
-const PiNetworkPayment = ({ amount, memo, metadata }) => {
+interface PiNetworkPaymentProps {
+  amount: number;
+  memo: string;
+  metadata: object;
+}
+
+const PiNetworkPayment: React.FC<PiNetworkPaymentProps> = ({ amount, memo, metadata }) => {
   useEffect(() => {
     const initiatePayment = async () => {
       if (!window.Pi) {
@@ -10,6 +16,11 @@ const PiNetworkPayment = ({ amount, memo, metadata }) => {
 
       const scopes = ["payments"];
       const appClientId = process.env.REACT_APP_PI_APP_CLIENT_ID;
+
+      if (!appClientId) {
+        console.error("Missing Pi App Client ID");
+        return;
+      }
 
       window.Pi.authenticate(scopes, appClientId, async (authResult) => {
         if (!authResult) {
@@ -35,13 +46,16 @@ const PiNetworkPayment = ({ amount, memo, metadata }) => {
 
           payment.onCancel((error) => {
             console.error("Payment canceled:", error);
+            // Optionally add user feedback here
           });
 
           payment.onError((error) => {
             console.error("Payment error:", error);
+            // Optionally add user feedback here
           });
         } catch (error) {
           console.error("Payment initiation error:", error);
+          // Optionally add user feedback here
         }
       });
     };
@@ -49,7 +63,7 @@ const PiNetworkPayment = ({ amount, memo, metadata }) => {
     initiatePayment();
   }, [amount, memo, metadata]);
 
-  const approvePayment = async (paymentId) => {
+  const approvePayment = async (paymentId: string) => {
     try {
       const response = await fetch("http://localhost:5000/api/approve-payment", {
         method: "POST",
@@ -67,6 +81,7 @@ const PiNetworkPayment = ({ amount, memo, metadata }) => {
       console.log("Payment approved:", data);
     } catch (error) {
       console.error("Error approving payment:", error);
+      // Optionally add user feedback here
     }
   };
 
