@@ -1,11 +1,11 @@
 import express from 'express';
 import { createProduct, getProduct, updateProduct, deleteProduct, getAllProducts } from '../controllers/productController';
-import { validateProduct } from '../utils/validators';
+import { validateProduct } from '../utils/validator
 
 const router = express.Router();
 
 // Route to create a new product
-router.post('/', validateProduct, createProduct);
+router.post('/', validateProduct, createPro
 
 // Route to get a product by ID
 router.get('/:id', getProduct);
@@ -14,7 +14,7 @@ router.get('/:id', getProduct);
 router.put('/:id', validateProduct, updateProduct);
 
 // Route to delete a product by ID
-router.delete('/:id', deleteProduct);
+router.delete('/:iroduct);
 
 // Route to get all products
 router.get('/', getAllProducts);
