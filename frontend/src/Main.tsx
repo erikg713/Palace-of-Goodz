@@ -4,7 +4,6 @@ import Footer from '../components/Footer';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from '../theme';
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
@@ -12,15 +11,6 @@ import store from "./redux/store";
 import App from "./App";
 import "./styles/global.css";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
-);
 // Create a client for React Query
 const queryClient = new QueryClient();
 
@@ -62,5 +52,14 @@ const styles = {
   },
 };
 
-export default Main;
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>
+);
 
+export default Main;
