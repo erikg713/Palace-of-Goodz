@@ -3,10 +3,17 @@ import { useEffect } from "react";
 interface PiNetworkPaymentProps {
   amount: number;
   memo: string;
-  metadata: object;
+  metadata: Record<string, any>; // More specific type for metadata
 }
 
 const PiNetworkPayment: React.FC<PiNetworkPaymentProps> = ({ amount, memo, metadata }) => {
+  // Check environment variables once
+  const appClientId = process.env.REACT_APP_PI_APP_CLIENT_ID;
+  if (!appClientId) {
+    console.error("Missing Pi App Client ID");
+    return <div>Error: Missing configuration</div>;
+  }
+
   useEffect(() => {
     const initiatePayment = async () => {
       if (!window.Pi) {
@@ -15,12 +22,6 @@ const PiNetworkPayment: React.FC<PiNetworkPaymentProps> = ({ amount, memo, metad
       }
 
       const scopes = ["payments"];
-      const appClientId = process.env.REACT_APP_PI_APP_CLIENT_ID;
-
-      if (!appClientId) {
-        console.error("Missing Pi App Client ID");
-        return;
-      }
 
       window.Pi.authenticate(scopes, appClientId, async (authResult) => {
         if (!authResult) {
@@ -44,24 +45,21 @@ const PiNetworkPayment: React.FC<PiNetworkPaymentProps> = ({ amount, memo, metad
             console.log("Payment Ready for Completion:", paymentId);
           });
 
-          payment.onCancel((error) => {
-            console.error("Payment canceled:", error);
-            // Optionally add user feedback here
-          });
-
-          payment.onError((error) => {
-            console.error("Payment error:", error);
-            // Optionally add user feedback here
-          });
+          payment.onCancel(handlePaymentError);
+          payment.onError(handlePaymentError);
         } catch (error) {
-          console.error("Payment initiation error:", error);
-          // Optionally add user feedback here
+          handlePaymentError(error);
         }
       });
     };
 
+    const handlePaymentError = (error: any) => {
+      console.error("Payment error:", error);
+      // Optionally add user feedback here
+    };
+
     initiatePayment();
-  }, [amount, memo, metadata]);
+  }, [amount, memo, metadata, appClientId]);
 
   const approvePayment = async (paymentId: string) => {
     try {
@@ -85,7 +83,7 @@ const PiNetworkPayment: React.FC<PiNetworkPaymentProps> = ({ amount, memo, metad
     }
   };
 
-  return null;
+  return <div>Processing Payment...</div>; // Provide user feedback
 };
 
 export default PiNetworkPayment;
