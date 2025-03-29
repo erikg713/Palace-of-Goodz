@@ -1,4 +1,4 @@
-# Palace of Goods
+# Palace of Goodz
 
 A Web3-powered decentralized marketplace using Node.js, Express, and React (TypeScript).
 
