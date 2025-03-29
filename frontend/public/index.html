@@ -51,3 +51,92 @@
     </script>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palace of Goodz</title>
+    <meta name="description" content="A Web3-powered decentralized marketplace">
+    <meta property="og:title" content="Palace of Goodz">
+    <meta property="og:description" content="A Web3-powered decentralized marketplace">
+    <meta property="og:url" content="https://yourdomain.com">
+    <meta property="og:type" content="website">
+    <meta name="keywords" content="Web3, decentralized, marketplace, blockchain, crypto">
+    <meta name="author" content="Your Name or Company">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://sdk.minepi.com;">
+    <style>
+        /* Critical CSS */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header, footer {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+        }
+    </style>
+    <noscript>
+        <link rel="stylesheet" href="/styles.css">
+    </noscript>
+</head>
+<body>
+    <header role="banner">
+        <h1>Welcome to the Palace of Goodz</h1>
+    </header>
+    <main role="main">
+        <!-- Page content -->
+    </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Palace of Goodz. All rights reserved.</p>
+    </footer>
+    <script>
+        // Initialize Pi SDK
+        function initializePiSDK() {
+            Pi.init({ version: "2.0", sandbox: true });
+            const scopes = ['payments'];
+
+            function onIncompletePaymentFound(payment) {
+                const paymentId = payment.identifier;
+                const txid = payment.transaction.txid;
+                fetch('/payment/complete', {
+                    method: 'POST',
+                    body: JSON.stringify({ paymentId, txid, debug: 'cancel' }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+
+            Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
+                console.log('Pi SDK Initialized!');
+            }).catch(function(error) {
+                console.error('Pi SDK Initialization Error:', error);
+            });
+        }
+
+        // Load Pi SDK script and initialize
+        (function() {
+            var script = document.createElement('script');
+            script.src = 'https://sdk.minepi.com/pi-sdk.js';
+            script.onload = initializePiSDK;
+            document.head.appendChild(script);
+        })();
+
+        // Lazy load non-critical scripts
+        function loadScript(src) {
+            var script = document.createElement('script');
+            script.src = src;
+            script.async = true;
+            document.head.appendChild(script);
+        }
+        loadScript('/path/to/your/script.js');
+    </script>
+</body>
+</html>
