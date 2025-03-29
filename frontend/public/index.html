@@ -11,60 +11,6 @@
     <meta property="og:type" content="website">
     <meta name="keywords" content="Web3, decentralized, marketplace, blockchain, crypto">
     <meta name="author" content="Your Name or Company">
-    <link rel="icon" href="path/to/favicon.ico" type="image/x-icon">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://sdk.minepi.com;">
-</head>
-<body>
-    <header role="banner">
-        <!-- Your header content -->
-    </header>
-    <main role="main">
-        <!-- Page content -->
-    </main>
-    <footer role="contentinfo">
-        <!-- Your footer content -->
-    </footer>
-    <script src="https://sdk.minepi.com/pi-sdk.js" async></script>
-    <script src="path/to/your/script.js"></script>
-    <script>
-        Pi.init({ version: "2.0", sandbox: true });
-
-        // Authenticate the user, and get permission to request payments from them:
-        const scopes = ['payments'];
-
-        // Read more about this callback in the SDK reference:
-        function onIncompletePaymentFound(payment) { 
-            const paymentId = payment.identifier;
-            const txid = payment.transaction.txid;
-            $.post('/payment/complete', {
-                paymentId: paymentId,
-                txid: txid,
-                debug: 'cancel'
-            });
-        };
-
-        Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
-            console.log('woot!');
-        }).catch(function(error) {
-            console.error(error);
-        });
-    </script>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palace of Goodz</title>
-    <meta name="description" content="A Web3-powered decentralized marketplace">
-    <meta property="og:title" content="Palace of Goodz">
-    <meta property="og:description" content="A Web3-powered decentralized marketplace">
-    <meta property="og:url" content="https://yourdomain.com">
-    <meta property="og:type" content="website">
-    <meta name="keywords" content="Web3, decentralized, marketplace, blockchain, crypto">
-    <meta name="author" content="Your Name or Company">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://sdk.minepi.com;">
     <style>
