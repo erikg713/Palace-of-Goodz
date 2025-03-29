@@ -1,24 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palace of Goodz</title>
+    <meta name="description" content="A Web3-powered decentralized marketplace">
+    <meta property="og:title" content="Palace of Goodz">
+    <meta property="og:description" content="A Web3-powered decentralized marketplace">
+    <meta property="og:url" content="https://yourdomain.com">
+    <meta property="og:type" content="website">
+</head>
+<body>
+    <!-- Page content -->
 
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script> Pi.init({ version: "2.0", sandbox: true }) </script>
-<script> 
-    // Authenticate the user, and get permission to request payments from them:
-    const scopes = ['payments'];
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script> 
+        Pi.init({ version: "2.0", sandbox: true });
 
-    // Read more about this callback in the SDK reference:
-    function onIncompletePaymentFound(payment) { 
-        paymentId = payment.identifier
-        txid = payment.transaction.txid
-        $.post('/payment/complete',
-                {
-                    paymentId: paymentId,
-                    txid: txid,
-                    debug: 'cancel'
-                }
-            )
-    };
+        // Authenticate the user, and get permission to request payments from them:
+        const scopes = ['payments'];
 
-    Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
-console.log('woot!');
-    }).catch(function(error) {
-      console.error(error);
+        // Read more about this callback in the SDK reference:
+        function onIncompletePaymentFound(payment) { 
+            const paymentId = payment.identifier;
+            const txid = payment.transaction.txid;
+            $.post('/payment/complete', {
+                        paymentId: paymentId,
+                        txid: txid,
+                        debug: 'cancel'
+                    }
+                );
+        };
+
+        Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
+            console.log('woot!');
+        }).catch(function(error) {
+            console.error(error);
+        });
+    </script>
+</body>
+</html>
