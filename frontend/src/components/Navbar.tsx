@@ -4,13 +4,18 @@ import { Link } from 'react-router-dom';
 const Navbar: React.FC = () => {
     return (
         <nav style={styles.nav}>
-            <Link to="/" style={styles.link}>Home</Link>
-            <Link to="/dashboard" style={styles.link}>Dashboard</Link>
+            <NavLink to="/" label="Home" />
+            <NavLink to="/dashboard" label="Dashboard" />
         </nav>
     );
 };
 
-const styles = {
+type Styles = {
+    nav: React.CSSProperties;
+    link: React.CSSProperties;
+};
+
+const styles: Styles = {
     nav: {
         display: 'flex',
         gap: '1rem',
@@ -22,6 +27,19 @@ const styles = {
         color: '#fff',
         textDecoration: 'none',
     },
+};
+
+type NavLinkProps = {
+    to: string;
+    label: string;
+};
+
+const NavLink: React.FC<NavLinkProps> = ({ to, label }) => {
+    return (
+        <Link to={to} style={styles.link} aria-label={label}>
+            {label}
+        </Link>
+    );
 };
 
 export default Navbar;
