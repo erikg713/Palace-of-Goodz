@@ -2,7 +2,15 @@ import React, { useState } from 'react';
 import { initiatePayment } from '../services/paymentApi';
 import { usePi } from '../contexts/PiContext';
 
-const ProductCard: React.FC<{ product: any }> = ({ product }) => {
+interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+}
+
+const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const { userWallet } = usePi();
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -34,6 +42,8 @@ const ProductCard: React.FC<{ product: any }> = ({ product }) => {
       <button
         onClick={handlePurchase}
         disabled={isProcessing}
+        aria-busy={isProcessing}
+        aria-label={`Buy ${product.name} with Pi`}
       >
         {isProcessing ? 'Processing...' : 'Buy with Pi'}
       </button>
