@@ -1,11 +1,22 @@
 .marketplace__container {
-  /* styles */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f9f9f9;
 }
 
 .marketplace__title {
-  /* styles */
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .marketplace__product-grid {
-  /* styles */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
 }
