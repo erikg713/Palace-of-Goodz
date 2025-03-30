@@ -1,3 +1,16 @@
+/* _grid.css */
+.container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+}
+
+.item {
+  background-color: #f0f0f0;
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+
 /* Grid CSS */
 .container {
   display: grid;
