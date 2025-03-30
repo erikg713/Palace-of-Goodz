@@ -63,6 +63,82 @@ Palace of Goods is a decentralized marketplace that allows users to buy and sell
 
 ---
 
+### FRONTEND FILE STRUCTURE ###
+frontend/
+├── public/
+│   ├── index.html
+│   ├── favicon.ico
+│   └── manifest.json
+├── src/
+│   ├── assets/
+│   │   ├── images/
+│   │   │   ├── logo.png
+│   │   │   └── background.jpg
+│   │   ├── fonts/
+│   │   │   ├── OpenSans-Regular.ttf
+│   │   │   └── OpenSans-Bold.ttf
+│   │   └── styles/
+│   │       ├── base/
+│   │       │   ├── _reset.css
+│   │       │   └── _typography.css
+│   │       ├── layout/
+│   │       │   ├── _grid.css
+│   │       │   └── _header.css
+│   │       ├── components/
+│   │       │   ├── _button.css
+│   │       │   ├── _form.css
+│   │       │   └── _navbar.css
+│   │       ├── utilities/
+│   │       │   ├── _margin.css
+│   │       │   ├── _padding.css
+│   │       │   └── _text-align.css
+│   │       └── main.css
+│   ├── components/
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Button.tsx
+│   │   ├── Form.tsx
+│   │   └── Modal.tsx
+│   ├── hooks/
+│   │   ├── useAuth.ts
+│   │   ├── useFetch.ts
+│   │   └── useTheme.ts
+│   ├── pages/
+│   │   ├── Home.tsx
+│   │   ├── About.tsx
+│   │   ├── Contact.tsx
+│   │   ├── Dashboard.tsx
+│   │   └── NotFound.tsx
+│   ├── redux/
+│   │   ├── store.ts
+│   │   ├── reducers/
+│   │   │   ├── authReducer.ts
+│   │   │   └── productReducer.ts
+│   │   ├── actions/
+│   │   │   ├── authActions.ts
+│   │   │   └── productActions.ts
+│   │   └── types/
+│   │       ├── authTypes.ts
+│   │       └── productTypes.ts
+│   ├── routes/
+│   │   ├── PrivateRoute.tsx
+│   │   ├── PublicRoute.tsx
+│   │   └── AppRoutes.tsx
+│   ├── services/
+│   │   ├── api.ts
+│   │   ├── authService.ts
+│   │   └── productService.ts
+│   ├── utils/
+│   │   ├── validation.ts
+│   │   ├── helpers.ts
+│   │   └── constants.ts
+│   ├── App.tsx
+│   ├── index.tsx
+│   └── styles/
+│       ├── global.css
+│       └── theme.ts
+└── ...
+
 ## Getting Started
 
 1. Create a new Next.js app with TypeScript:
