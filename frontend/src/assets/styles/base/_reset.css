@@ -4,6 +4,10 @@
    License: none (public domain)
 */
 
+/* Include Normalize.css */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css');
+
+/* Custom Reset/Styles */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -24,44 +28,48 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
   display: block;
 }
+
 body {
   line-height: 1;
 }
+
 ol, ul {
   list-style: none;
 }
+
 blockquote, q {
   quotes: none;
 }
+
 blockquote:before, blockquote:after,
 q:before, q:after {
   content: '';
   content: none;
 }
+
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-/* Include Normalize.css */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css');
 
-/* Custom Reset/Styles */
 * {
   box-sizing: border-box;
 }
 
+/* Specific resets */
 body {
   margin: 0;
   padding: 0;
 }
-/* Reset CSS */
+
+/* Remove default margin and padding */
 * {
-  margin: 0; /* Remove default margin */
-  padding: 0; /* Remove default padding */
-  box-sizing: border-box; /* Use border-box model */
+  margin: 0;
+  padding: 0;
 }
