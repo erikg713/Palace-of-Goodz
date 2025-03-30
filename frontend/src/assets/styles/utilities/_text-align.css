@@ -1,3 +1,51 @@
 /* Text Align Utilities */
-.text-center { text-align: center; }
-.text-right { text-align: right; }
+
+/* Center align text */
+.text-center {
+    text-align: center;
+}
+
+/* Right align text */
+.text-right {
+    text-align: right;
+}
+
+/* Left align text */
+.text-left {
+    text-align: left;
+}
+
+/* Justify align text */
+.text-justify {
+    text-align: justify;
+}
+
+/* Responsive Text Alignments */
+
+/* Center text on small screens */
+@media (max-width: 600px) {
+    .text-sm-center {
+        text-align: center;
+    }
+}
+
+/* Right align text on small screens */
+@media (max-width: 600px) {
+    .text-sm-right {
+        text-align: right;
+    }
+}
+
+/* Left align text on small screens */
+@media (max-width: 600px) {
+    .text-sm-left {
+        text-align: left;
+    }
+}
+
+/* Justify text on small screens */
+@media (max-width: 600px) {
+    .text-sm-justify {
+        text-align: justify;
+    }
+}
