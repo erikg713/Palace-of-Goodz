@@ -1,19 +1,35 @@
-/* _grid.css */
+:root {
+  --background-color: #f0f0f0;
+  --border-color: #ccc;
+  --gap-size: 1rem;
+  --padding-size: 1rem;
+}
+
 .container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 1rem;
+  gap: var(--gap-size);
 }
 
 .item {
-  background-color: #f0f0f0;
-  padding: 1rem;
-  border: 1px solid #ccc;
+  background-color: var(--background-color);
+  padding: var(--padding-size);
+  border: 1px solid var(--border-color);
 }
-
-/* Grid CSS */
 .container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 1rem;
+  gap: var(--gap-size);
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
