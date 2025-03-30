@@ -10,7 +10,30 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import App from "./App";
 import "./styles/global.css";
+import express from "express";
+import { requestLoggingMiddleware } from "./middlewares/requestLoggingMiddleware";
+import { rateLimitingMiddleware } from "./middlewares/rateLimitingMiddleware";
+import { corsMiddleware } from "./middlewares/corsMiddleware";
+import { compressionMiddleware } from "./middlewares/compressionMiddleware";
+import { authMiddleware } from "./middlewares/authMiddleware";
+import { errorMiddleware } from "./middlewares/errorMiddleware";
 
+const app = express();
+
+app.use(requestLoggingMiddleware);
+app.use(rateLimitingMiddleware);
+app.use(corsMiddleware);
+app.use(compressionMiddleware);
+app.use(authMiddleware);
+
+// Your route handlers here...
+
+app.use(errorMiddleware);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 // Create a client for React Query
 const queryClient = new QueryClient();
 
