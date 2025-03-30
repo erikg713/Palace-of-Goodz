@@ -10,57 +10,26 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import App from "./App";
 import "./styles/global.css";
-import express from "express";
-import { requestLoggingMiddleware } from "./middlewares/requestLoggingMiddleware";
-import { rateLimitingMiddleware } from "./middlewares/rateLimitingMiddleware";
-import { corsMiddleware } from "./middlewares/corsMiddleware";
-import { compressionMiddleware } from "./middlewares/compressionMiddleware";
-import { authMiddleware } from "./middlewares/authMiddleware";
-import { errorMiddleware } from "./middlewares/errorMiddleware";
 
-const app = express();
-
-app.use(requestLoggingMiddleware);
-app.use(rateLimitingMiddleware);
-app.use(corsMiddleware);
-app.use(compressionMiddleware);
-app.use(authMiddleware);
-
-// Your route handlers here...
-
-app.use(errorMiddleware);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-// Create a client for React Query
 const queryClient = new QueryClient();
 
 interface MainProps {
   children: ReactNode;
 }
 
-const Main: React.FC<MainProps> = ({ children }) => {
+const Main: React.FC<MainProps> = React.memo(({ children }) => {
   return (
-    // Provide Chakra UI theme
     <ChakraProvider theme={theme}>
-      {/* Provide React Query for data fetching */}
       <QueryClientProvider client={queryClient}>
         <div style={styles.container}>
-          {/* Include the Navbar at the top */}
           <Navbar />
-          
-          {/* Render the main content (pages) */}
           <main style={styles.main}>{children}</main>
-          
-          {/* Include the Footer at the bottom */}
           <Footer />
         </div>
       </QueryClientProvider>
     </ChakraProvider>
   );
-};
+});
 
 const styles = {
   container: {
