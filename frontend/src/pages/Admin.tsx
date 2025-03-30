@@ -1,9 +1,37 @@
 import { useSession, signIn } from "next-auth/react";
 import { useState } from "react";
 
-const Admin = () => {
-  const { data: session } = useSession();
+// TypeScript types for session, products, and orders
+type Session = {
+  user: {
+    role: string;
+  };
+};
 
+type Product = {
+  id: number;
+  name: string;
+  price: string;
+};
+
+type Order = {
+  id: number;
+  user: string;
+  product: string;
+  price: string;
+  status: string;
+};
+
+const Admin = () => {
+  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(true);
+
+  // Loading state
+  if (status === "loading") {
+    return <div className="loading">Loading...</div>;
+  }
+
+  // Error state for sign-in failure
   if (!session) {
     return (
       <div className="text-center text-white min-h-screen flex items-center justify-center">
@@ -15,6 +43,7 @@ const Admin = () => {
     );
   }
 
+  // Access denied for non-admin users
   if (session.user.role !== "admin") {
     return (
       <div className="text-center text-red-500 min-h-screen flex items-center justify-center">
@@ -23,6 +52,7 @@ const Admin = () => {
     );
   }
 
+  // Admin dashboard
   return (
     <div className="container mx-auto p-8 text-white">
       <h1 className="text-3xl font-bold text-center">Admin Dashboard</h1>
@@ -37,9 +67,9 @@ const Admin = () => {
   );
 };
 
-// Product Management
+// Product Management Component
 const AdminProducts = () => {
-  const [products, setProducts] = useState([
+  const [products, setProducts] = useState<Product[]>([
     { id: 1, name: "Product A", price: "10 Pi" },
     { id: 2, name: "Product B", price: "15 Pi" },
   ]);
@@ -60,9 +90,9 @@ const AdminProducts = () => {
   );
 };
 
-// Orders Management
+// Orders Management Component
 const AdminOrders = () => {
-  const orders = [
+  const orders: Order[] = [
     { id: 1, user: "John", product: "Product A", price: "10 Pi", status: "Pending" },
     { id: 2, user: "Alice", product: "Product B", price: "15 Pi", status: "Completed" },
   ];
