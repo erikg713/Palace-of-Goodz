@@ -16,12 +16,8 @@
   padding: var(--padding-size);
   border: 1px solid var(--border-color);
 }
-.container {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--gap-size);
-}
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .container {
     grid-template-columns: repeat(6, 1fr);
