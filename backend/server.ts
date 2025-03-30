@@ -4,44 +4,20 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db";
 import pool from '../config/db.js';
-// backend/server.js or backend/app.js
-const express = require('express');
-const paymentRoutes = require('./routes/paymentRoutes');
-const sequelize = require('./config');
-
-const app = express();
-
-app.use(express.json());
-
-// Use the payment routes
-app.use('/api', paymentRoutes);
-
-// Sync Sequelize models with the database
-sequelize.sync().then(() => {
-  console.log('Database synced');
-}).catch((error) => {
-  console.error('Error syncing database:', error);
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-// Import Routes
 import productRoutes from "./routes/productRoutes";
 import orderRoutes from "./routes/orderRoutes";
 import userRoutes from "./routes/userRoutes";
 import cartRoutes from "./routes/cartRoutes";
 import authRoutes from "./routes/authRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
-
-// Import Middlewares
 import { authMiddleware } from "./middlewares/authMiddleware";
 import { errorMiddleware } from "./middlewares/errorMiddleware";
+import { executeQuery } from './dbUtils';
 
 // Load environment variables
 dotenv.config();
 
+// Initialize app
 const app = express();
 
 // Connect to Database
@@ -71,8 +47,6 @@ app.listen(PORT, () => {
 });
 
 // Use the modularized database function
-import { executeQuery } from './dbUtils';
-
 const runQuery = async () => {
   const query = 'SELECT * FROM payments;';
   try {
