@@ -2,6 +2,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import connectDB from "./config/db";
 import pool from '../config/db.js';
 import productRoutes from "./routes/productRoutes";
@@ -26,6 +28,14 @@ connectDB();
 // Middleware Setup
 app.use(cors());
 app.use(express.json());
+app.use(helmet());
+
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
 
 // Routes Setup
 app.use("/api/auth", authRoutes);
@@ -43,7 +53,7 @@ const PORT = process.env.PORT || 5000;
 
 // Start the Server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
 // Use the modularized database function
