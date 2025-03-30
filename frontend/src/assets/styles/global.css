@@ -18,6 +18,10 @@ a {
     color: #007bff;
     text-decoration: none;
 }
+button:focus, a:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
 
 a:hover {
     text-decoration: underline;
