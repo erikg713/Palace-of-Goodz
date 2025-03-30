@@ -120,3 +120,22 @@ router.get('/:id', async (req, res) => {
 });
 
 export default router;
+// backend/routes/paymentRoutes.js
+const express = require('express');
+const {
+  createPayment,
+  getPayments,
+  getPaymentById,
+  updatePaymentStatus,
+  deletePayment,
+} = require('../controllers/orderController');
+
+const router = express.Router();
+
+router.post('/payments', createPayment);
+router.get('/payments', getPayments);
+router.get('/payments/:id', getPaymentById);
+router.put('/payments/:id', updatePaymentStatus);
+router.delete('/payments/:id', deletePayment);
+
+module.exports = router;
