@@ -1,51 +1,70 @@
+// backend/controllers/orderController.ts
 import { Request, Response } from 'express';
-import Order from '../models/Order';
-import { withTransaction } from '../utils/transactionHelper';
-import { check, validationResult } from 'express-validator';
+import Payment from '../models/Payment';
 
-// Helper function to validate request
-const validateRequest = (req: Request, res: Response, validations: any) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+// Create a new payment
+export const createPayment = async (req: Request, res: Response) => {
+  try {
+    const { amount, currency, status } = req.body;
+    const payment = await Payment.create({ amount, currency, status });
+    res.status(201).json(payment);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
-// Create Order
-export const createOrder = [
-  check('userId').notEmpty().withMessage('User ID is required.'),
-  check('items').isArray({ min: 1 }).withMessage('Items array must not be empty.'),
-  async (req: Request, res: Response) => {
-    if (validateRequest(req, res, validationResult)) return;
-
-    try {
-      const order = new Order(req.body);
-      await withTransaction(req.dbConnection, async (session) => {
-        await order.save({ session });
-        res.status(201).json(order);
-      });
-    } catch (error: any) {
-      res.status(500).json({ error: 'Failed to create order', details: error.message });
-    }
+// Get all payments
+export const getPayments = async (req: Request, res: Response) => {
+  try {
+    const payments = await Payment.findAll();
+    res.status(200).json(payments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-];
+};
 
-// Update Order Status
-export const updateOrderStatus = [
-  check('paymentId').notEmpty().withMessage('Payment ID is required.'),
-  check('status').notEmpty().withMessage('Status is required.'),
-  async (req: Request, res: Response) => {
-    if (validateRequest(req, res, validationResult)) return;
-
-    try {
-      const { paymentId, status } = req.body;
-      const order = await Order.findOneAndUpdate({ paymentId }, { status }, { new: true });
-      if (!order) {
-        return res.status(404).json({ error: 'Order not found' });
-      }
-      res.status(200).json(order);
-    } catch (error: any) {
-      res.status(500).json({ error: 'Failed to update order status', details: error.message });
+// Get payment by ID
+export const getPaymentById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const payment = await Payment.findByPk(id);
+    if (!payment) {
+      return res.status(404).json({ error: 'Payment not found' });
     }
+    res.status(200).json(payment);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-];
+};
+
+// Update payment status
+export const updatePaymentStatus = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const payment = await Payment.findByPk(id);
+    if (!payment) {
+      return res.status(404).json({ error: 'Payment not found' });
+    }
+    payment.status = status;
+    await payment.save();
+    res.status(200).json(payment);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Delete payment
+export const deletePayment = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const payment = await Payment.findByPk(id);
+    if (!payment) {
+      return res.status(404).json({ error: 'Payment not found' });
+    }
+    await payment.destroy();
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
