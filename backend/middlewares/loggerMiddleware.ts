@@ -47,3 +47,25 @@ try {
   console.error('Logging error:', error);
 }
 next();
+import { Request, Response, NextFunction } from 'express';
+import { createLogger, transports, format } from 'winston';
+
+const logger = createLogger({
+  level: process.env.NODE_ENV === 'production' ? 'warn' : 'info',
+  format: format.combine(
+    format.timestamp(),
+    format.json()
+  ),
+  transports: [
+    new transports.Console(),
+  ],
+});
+
+export const loggerMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    logger.info(`${req.method} ${req.url}`, { headers: req.headers, body: req.body });
+  } catch (error) {
+    logger.error('Logging error:', error);
+  }
+  next();
+};
