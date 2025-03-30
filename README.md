@@ -303,6 +303,255 @@ Your app's frontend sends the PaymentID to your app's server. This implementatio
 
 This project is licensed under the Pi Network License PIOS. See the [LICENSE](LICENSE) file for details.
 
+Got it! Here’s an even more detailed and comprehensive version of the `Getting Started` and `Installation` sections for setting up the Palace of Goods project:
+
+### Getting Started
+
+1. **Create a new Next.js app with TypeScript:**
+    ```bash
+    npx create-next-app@latest palace-of-goods --typescript
+    cd palace-of-goods
+    ```
+
+2. **Ensure you have the following installed on your system:**
+    - **Node.js (16+) & npm/yarn:**
+        - [Download Node.js](https://nodejs.org/) and follow the installation instructions for your operating system.
+        - Verify the installation by running:
+          ```bash
+          node -v
+          npm -v
+          ```
+    - **PostgreSQL (17+):**
+        - [Download PostgreSQL](https://www.postgresql.org/download/) and follow the installation instructions for your operating system.
+        - Verify the installation by running:
+          ```bash
+          psql --version
+          ```
+    - **Docker (Optional for deployment):**
+        - [Download Docker](https://www.docker.com/get-started) and follow the installation instructions for your operating system.
+        - Verify the installation by running:
+          ```bash
+          docker --version
+          ```
+
+3. **Install necessary dependencies for the Next.js app:**
+    ```bash
+    npm install next-auth bcryptjs jsonwebtoken web3 @types/jsonwebtoken @types/bcryptjs @types/web3js
+    ```
+
+### Installation
+
+#### Clone the Repository
+
+1. **Clone the repository from GitHub:**
+    ```bash
+    git clone https://github.com/erikg713/palace-of-goods.git
+    cd palace-of-goods
+    ```
+
+#### Backend Setup (Node.js + Express API)
+
+1. **Navigate to the server directory:**
+    ```bash
+    cd server
+    ```
+
+2. **Install dependencies:**
+    ```bash
+    npm install
+    npm install node-cron @pinetwork-js/sdk web3 dotenv express fs moment sequelize pg pg-hstore
+    ```
+
+3. **Create a `.env` file in the server directory and add the required environment variables:**
+    ```plaintext
+    PORT=5000
+    DATABASE_URL=postgres://user:password@localhost:5432/palaceofgoods
+    JWT_SECRET=your_jwt_secret
+    PI_NETWORK_API_KEY=your_pi_network_api_key
+    ```
+
+4. **Apply database migrations and start the development server:**
+    ```bash
+    npm run migrate  # Apply database migrations
+    npm run dev      # Start development server
+    ```
+
+5. **Verify that the backend server is running by accessing:**
+    ```
+    http://localhost:5000
+    ```
+
+#### Frontend Setup (React with TypeScript)
+
+1. **Navigate to the client directory:**
+    ```bash
+    cd client
+    ```
+
+2. **Install dependencies:**
+    ```bash
+    npm install react-router-dom axios@latest react-query @types/react-router-dom @types/axios @types/react-query
+    ```
+
+3. **Create a `.env` file in the client directory and add the required environment variables:**
+    ```plaintext
+    REACT_APP_API_URL=http://localhost:5000
+    ```
+
+4. **Start the frontend server:**
+    ```bash
+    npm start
+    ```
+
+5. **Verify that the frontend server is running by accessing:**
+    ```
+    http://localhost:3000
+    ```
+
+#### Docker Setup
+
+1. **Build and run the server in Docker:**
+    ```bash
+    docker build -t palace-of-goods-server .
+    docker run -d -p 5000:5000 --env-file .env palace-of-goods-server
+    ```
+
+2. **Use Docker Compose for Backend & Database:**
+
+    **Create a `docker-compose.yml` file with the following content:**
+    ```yaml
+    version: '3.8'
+    services:
+      db:
+        image: postgres:17
+        environment:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: palaceofgoods
+        ports:
+          - "5432:5432"
+        volumes:
+          - postgres_data:/var/lib/postgresql/data
+
+      server:
+        build: .
+        ports:
+          - "5000:5000"
+        env_file:
+          - .env
+        depends_on:
+          - db
+
+    volumes:
+      postgres_data:
+    ```
+
+3. **Start the services using Docker Compose:**
+    ```bash
+    docker-compose up -d
+    ```
+
+4. **Verify that the services are running:**
+    ```bash
+    docker-compose ps
+    ```
+
+#### Environment Variables
+
+**Backend (`server/.env`):**
+```plaintext
+PORT=5000
+DATABASE_URL=postgres://user:password@localhost:5432/palaceofgoods
+JWT_SECRET=your_jwt_secret
+PI_NETWORK_API_KEY=your_pi_network_api_key
+```
+
+**Frontend (`client/.env`):**
+```plaintext
+REACT_APP_API_URL=http://localhost:5000
+```
+
+#### Database Schema
+
+**Users Table:**
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+**Products Table:**
+```sql
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### API Endpoints
+
+**Authentication:**
+- `POST /api/users/signup` – Register new users
+- `POST /api/users/login` – Login and receive JWT
+- `GET /api/users/profile` – Get user details (Requires JWT)
+
+**Products:**
+- `GET /api/products` – Fetch all products
+- `POST /api/products` – Add new product (Admin only)
+- `PUT /api/products/:id` – Edit product details (Admin only)
+- `DELETE /api/products/:id` – Remove product (Admin only)
+
+**Payments (Pi Network):**
+- `POST /api/payment/create` – Initiate a Pi Network payment
+- `POST /api/payment/verify` – Confirm and validate Pi payment
+
+#### Future Roadmap
+- 🔹 React Native Mobile App for Android & iOS
+- 🔹 Cross-chain Bridge with Ethereum & Bitcoin
+- 🔹 NFT Marketplace for digital goods
+- 🔹 Automated dispute resolution system
+- 🔹 Advanced search & filters for better product discovery
+
+#### Contributing
+
+We welcome contributions! Follow these steps:
+
+1. **Fork the repo:**
+    - Click the "Fork" button at the top right of the repository page.
+
+2. **Create a feature branch:**
+    ```bash
+    git checkout -b feature-branch
+    ```
+
+3. **Commit your changes:**
+    ```bash
+    git commit -m 'Add some feature'
+    ```
+
+4. **Push to the branch:**
+    ```bash
+    git push origin feature-branch
+    ```
+
+5. **Open a pull request:**
+    - Go to the "Pull Requests" tab of your forked repository.
+    - Click "New Pull Request" and select your feature branch.
+
+#### License
+
+This project is licensed under the Pi Network License PIOS. See the [LICENSE](LICENSE) file for details.
+
+---
+
+🚀 Palace of Goods - The Future of Decentralized Commerce!
 ---
 
 🚀 Palace of Goods - The Future of Decentralized Commerce!
