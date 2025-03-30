@@ -1,3 +1,4 @@
+/* Root Variables */
 :root {
     --primary-color: #007bff;
     --background-color: #f4f4f4;
@@ -5,6 +6,7 @@
     --font-family: Arial, sans-serif;
 }
 
+/* Body Styles */
 body {
     font-family: var(--font-family);
     background-color: var(--background-color);
@@ -12,47 +14,20 @@ body {
     line-height: 1.6;
 }
 
+/* Link Styles */
 a {
     color: var(--primary-color);
-}
-
-/* Reset some default browser styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Set global font settings */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    line-height: 1.6;
-}
-
-/* Links */
-a {
-    color: #007bff;
     text-decoration: none;
 }
-button:focus, a:focus {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
 
-a:hover {
-    text-decoration: underline;
-}
-
-/* Container */
+/* Container Styles */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Global button styles */
+/* Button Styles */
 button {
     cursor: pointer;
 }
@@ -60,6 +35,8 @@ button {
 button:disabled {
     cursor: not-allowed;
 }
+
+/* Media Queries */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
@@ -69,22 +46,6 @@ button:disabled {
         font-size: 14px;
     }
 }
-button, a {
-    cursor: pointer;
-}
-
-button:disabled, a:disabled {
-    cursor: not-allowed;
-}
-/* Reset some default browser styles */
-...
-
-/* Set global font settings */
-...
-
-/* Links */
-...
-
 /* Container */
 ...
 
