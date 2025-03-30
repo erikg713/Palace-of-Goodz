@@ -1,5 +1,6 @@
 module.exports = {
-  content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
+  purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"], // Use 'content' if using Tailwind CSS v3
+  darkMode: 'class', // or 'media' for media-query based dark mode
   theme: {
     extend: {
       colors: {
@@ -11,36 +12,9 @@ module.exports = {
       },
     },
   },
-  plugins: [require("daisyui")],
-};
-module.exports = {
-  darkMode: 'class', // or 'media' for media-query based dark mode
-  content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
-  theme: {
-    extend: {},
-  },
-  plugins: [require("daisyui")],
-};
-module.exports = {
-  content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
-  theme: {
-    extend: {},
-  },
   plugins: [
     require("daisyui"),
     require('@tailwindcss/forms'), // Add form utilities
     require('@tailwindcss/typography'), // Add typography utilities
-  ],
-};
-module.exports = {
-  purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"], // Purge unused styles
-  darkMode: 'class', 
-  theme: {
-    extend: {},
-  },
-  plugins: [
-    require("daisyui"),
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
   ],
 };
