@@ -1,8 +1,30 @@
-/* Button CSS */
+:root {
+  --button-bg-color: #007bff;
+  --button-text-color: #fff;
+  --button-padding: 0.5rem 1rem;
+}
+
 .button {
-  background-color: #007bff;
-  color: #fff;
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
   border: none;
-  padding: 0.5rem 1rem;
+  padding: var(--button-padding);
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover,
+.button:focus {
+  background-color: darken(var(--button-bg-color), 10%);
+}
+
+.button:focus {
+  outline: 2px solid #0056b3;
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .button {
+    padding: 0.5rem;
+  }
 }
