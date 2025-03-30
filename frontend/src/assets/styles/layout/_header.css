@@ -1,6 +1,21 @@
 /* Header CSS */
+
+/* Variables */
+:root {
+  --header-bg-color: #333;
+  --header-text-color: #fff;
+  --header-padding: 1rem;
+}
+
 header {
-  background-color: #333;
-  color: #fff;
-  padding: 1rem;
+  background-color: var(--header-bg-color);
+  color: var(--header-text-color);
+  padding: var(--header-padding);
+}
+
+/* Responsive design: Adjust header padding for smaller screens */
+@media (max-width: 600px) {
+  header {
+    padding: 0.5rem;
+  }
 }
