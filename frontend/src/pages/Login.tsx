@@ -1,5 +1,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+// Assuming you have a Spinner component
+import Spinner from "../components/Spinner";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
@@ -28,10 +30,11 @@ export default function Login() {
           disabled={loading}
           aria-live="polite"
           aria-busy={loading}
+          aria-label="Sign in"
         >
           {loading ? "Signing in..." : "Sign in with Credentials"}
         </button>
-        {loading && <div className="mt-4">Loading spinner...</div>}
+        {loading && <Spinner className="mt-4" />}
       </div>
     </div>
   );
