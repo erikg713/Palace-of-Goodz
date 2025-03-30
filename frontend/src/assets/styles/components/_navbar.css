@@ -4,3 +4,48 @@
   color: #fff;
   padding: 1rem;
 }
+/* Navbar container */
+.navbar {
+  background-color: #333; /* Dark background color */
+  color: #fff;            /* White text color */
+  padding: 1rem;          /* Padding for spacing */
+}
+:root {
+  --navbar-bg-color: #333;
+  --navbar-text-color: #fff;
+  --navbar-padding: 1rem;
+}
+
+.navbar {
+  background-color: var(--navbar-bg-color);
+  color: var(--navbar-text-color);
+  padding: var(--navbar-padding);
+}
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0.5rem;
+  }
+}
+.navbar {
+  background-color: #333;
+  color: #fff;
+  padding: 1rem;
+}
+
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbar a:focus {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  padding: 1rem;
+}
