@@ -1,22 +1,59 @@
-import mongoose, { Document, Schema } from "mongoose";
+import { DataTypes, Model, Optional } from 'sequelize';
+import { sequelize } from '../database'; // Make sure to set up your sequelize instance
 
-export interface IProduct extends Document {
+interface ProductAttributes {
+  id: number;
   name: string;
   description: string;
   price: number;
   quantity: number;
-  createdAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-const ProductSchema = new Schema<IProduct>(
+interface ProductCreationAttributes extends Optional<ProductAttributes, 'id'> {}
+
+class Product extends Model<ProductAttributes, ProductCreationAttributes> implements ProductAttributes {
+  public id!: number;
+  public name!: string;
+  public description!: string;
+  public price!: number;
+  public quantity!: number;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+Product.init(
   {
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    price: { type: Number, required: true },
-    quantity: { type: Number, required: true, min: 0 },
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    name: {
+      type: new DataTypes.STRING(128),
+      allowNull: false,
+    },
+    description: {
+      type: new DataTypes.STRING(1024),
+      allowNull: false,
+    },
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    quantity: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      defaultValue: 0,
+    },
   },
-  { timestamps: true }
+  {
+    tableName: 'products',
+    sequelize, // passing the `sequelize` instance is required
+    timestamps: true,
+  }
 );
 
-const Product = mongoose.model<IProduct>("Product", ProductSchema);
 export default Product;
