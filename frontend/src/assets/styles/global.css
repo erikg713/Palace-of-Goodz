@@ -1,3 +1,21 @@
+:root {
+    --primary-color: #007bff;
+    --background-color: #f4f4f4;
+    --text-color: #333;
+    --font-family: Arial, sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+a {
+    color: var(--primary-color);
+}
+
 /* Reset some default browser styles */
 * {
     margin: 0;
@@ -42,3 +60,33 @@ button {
 button:disabled {
     cursor: not-allowed;
 }
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    body {
+        font-size: 14px;
+    }
+}
+button, a {
+    cursor: pointer;
+}
+
+button:disabled, a:disabled {
+    cursor: not-allowed;
+}
+/* Reset some default browser styles */
+...
+
+/* Set global font settings */
+...
+
+/* Links */
+...
+
+/* Container */
+...
+
+/* Global button styles */
+...
