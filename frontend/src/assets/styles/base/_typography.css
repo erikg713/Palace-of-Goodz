@@ -1,6 +1,26 @@
 /* Typography CSS */
-body {
-  font-family: 'Open Sans', sans-serif;
-  line-height: 1.6;
-  color: #333;
+
+/* Define CSS variables for common values */
+:root {
+  --font-family-sans: 'Open Sans', sans-serif;
+  --color-text: #333;
+  --line-height: 1.6;
 }
+
+body {
+  font-family: var(--font-family-sans);
+  line-height: var(--line-height);
+  color: var(--color-text);
+}
+
+/* Add font weights for different text elements */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}
+
+p {
+  font-weight: 400;
+  margin-bottom: 1em;
+}
+
+/* Ensure proper spacing and indentation */
