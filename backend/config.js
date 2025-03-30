@@ -1,29 +1,7 @@
-const { Sequelize } = require('sequelize');
-
-const sequelize = new Sequelize('database', 'username', 'password', {
-  host: 'localhost',
-  dialect: 'postgres',
-});
-
-module.exports = sequelize;
-const sequelize = require('./config/database');
-const Payment = require('./models/Payments');
-
-(async () => {
-    try {
-        await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
-        await Payment.sync(); // This creates the table if it doesn't exist (and does nothing if it already exists)
-        console.log('Payment table created successfully.');
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
-    } finally {
-        await sequelize.close();
-    }
-})();
 require('dotenv').config();
 const { Sequelize } = require('sequelize');
 
+// Setup Sequelize instance
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -31,22 +9,29 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     dialect: 'postgres',
+    logging: false, // Disable logging for cleaner output
   }
 );
 
+// Export the Sequelize instance for reuse
 module.exports = sequelize;
 
-const Payment = require('./models/Payments');
+// Define a function to initialize the database connection
+const initializeDatabase = async () => {
+  const Payment = require('./models/Payments'); // Import models here for a cleaner structure
 
-(async () => {
-    try {
-        await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
-        await Payment.sync();
-        console.log('Payment table created successfully.');
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
-    } finally {
-        await sequelize.close();
-    }
-})();
+  try {
+    await sequelize.authenticate();
+    console.log('Database connection established successfully.');
+
+    await Payment.sync(); // Sync model with the database
+    console.log('Payment table created or exists successfully.');
+  } catch (error) {
+    console.error('Database connection failed:', error);
+  } finally {
+    await sequelize.close(); // Ensure connection is closed after operations
+  }
+};
+
+// Initialize the database connection
+initializeDatabase();
