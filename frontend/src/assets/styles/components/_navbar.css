@@ -1,51 +1,32 @@
 /* Navbar CSS */
-.navbar {
-  background-color: #333;
-  color: #fff;
-  padding: 1rem;
-}
-/* Navbar container */
-.navbar {
-  background-color: #333; /* Dark background color */
-  color: #fff;            /* White text color */
-  padding: 1rem;          /* Padding for spacing */
-}
 :root {
   --navbar-bg-color: #333;
   --navbar-text-color: #fff;
   --navbar-padding: 1rem;
+  --navbar-padding-mobile: 0.5rem;
 }
 
 .navbar {
   background-color: var(--navbar-bg-color);
   color: var(--navbar-text-color);
   padding: var(--navbar-padding);
-}
-@media (max-width: 600px) {
-  .navbar {
-    padding: 0.5rem;
-  }
-}
-.navbar {
-  background-color: #333;
-  color: #fff;
-  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .navbar a {
-  color: #fff;
+  color: var(--navbar-text-color);
   text-decoration: none;
 }
 
 .navbar a:focus {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--navbar-text-color);
   outline-offset: 4px;
 }
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #333;
-  color: #fff;
-  padding: 1rem;
+
+@media (max-width: 600px) {
+  .navbar {
+    padding: var(--navbar-padding-mobile);
+  }
 }
