@@ -1,4 +1,16 @@
 import React from 'react';
+import './Navbar.css';
+
+const Navbar: React.FC = () => {
+  return (
+    <nav className="navbar">
+      <h1>Palace of Goodz</h1>
+    </nav>
+  );
+};
+
+export default Navbar;
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
