@@ -1,24 +1,53 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getCart, updateCartItem } from '../services/cartApi';
 
-const Cart: React.FC = () => {
-  const [cart, setCart] = useState([]);
+interface CartItem {
+  productId: {
+    _id: string;
+    name: string;
+  };
+  quantity: number;
+}
 
-  useEffect(() => {
-    async function fetchCart() {
+const Cart: React.FC = () => {
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchCart = useCallback(async () => {
+    try {
+      setLoading(true);
       const cartItems = await getCart();
       setCart(cartItems);
+    } catch (err) {
+      setError('Failed to fetch cart items');
+    } finally {
+      setLoading(false);
     }
-    fetchCart();
   }, []);
 
-  const handleUpdateQuantity = async (productId: string, quantity: number) => {
-    await updateCartItem(productId, quantity);
-    // Refetch cart data to update UI
+  useEffect(() => {
     fetchCart();
-  };
+  }, [fetchCart]);
+
+  const handleUpdateQuantity = useCallback(async (productId: string, quantity: number) => {
+    try {
+      await updateCartItem(productId, quantity);
+      fetchCart();
+    } catch (err) {
+      setError('Failed to update cart item');
+    }
+  }, [fetchCart]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div>
