@@ -10,10 +10,17 @@ const Product = sequelize.define('Product', {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      notEmpty: true,
+    },
   },
   price: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
+    validate: {
+      isDecimal: true,
+      min: 0.01,
+    },
   },
   sellerId: {
     type: DataTypes.INTEGER,
@@ -25,15 +32,23 @@ const Product = sequelize.define('Product', {
 }, {
   tableName: 'Products',
   timestamps: true, // Enable timestamps
+  hooks: {
+    beforeCreate: (product) => {
+      // Add any necessary hooks here
+    },
+  },
 });
 
 // Sync the table
-sequelize.sync()
-  .then(() => {
+const syncTable = async () => {
+  try {
+    await sequelize.sync();
     console.log('Products table has been created.');
-  })
-  .catch(error => {
+  } catch (error) {
     console.error('Unable to create table:', error);
-  });
+  }
+};
+
+syncTable();
 
 module.exports = Product;
