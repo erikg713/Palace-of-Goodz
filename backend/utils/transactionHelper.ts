@@ -1,20 +1,28 @@
-
 import PiPaymentService from '../services/piPaymentService';
 import Product from '../models/Product';
 import Order from '../models/Order';
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
+import { body, validationResult } from 'express-validator';
+import logger from '../utils/logger'; // Assuming a custom logger is set up
 
 // Transaction Processing Function
 export const processPiTransaction = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
+    // Input validation
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     // Step 1: Fetch Product Details
     const product = await Product.findById(req.body.productId).session(session);
     if (!product) {
@@ -48,7 +56,7 @@ export const processPiTransaction = async (
   } catch (error) {
     // Abort transaction on error
     await session.abortTransaction();
-    console.error(error); // Log the error for debugging
+    logger.error('Transaction failed', { error }); // Log the error for debugging
     res.status(500).json({ error: 'Transaction failed. Please try again.' });
   } finally {
     session.endSession(); // Ensure the session is ended
@@ -56,7 +64,7 @@ export const processPiTransaction = async (
 };
 
 // Auth Middleware
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   // Extract the JWT token
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
