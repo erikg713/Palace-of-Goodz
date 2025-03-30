@@ -1,5 +1,3 @@
-// backend/utils/validators.ts
-
 import { ValidationError } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import { 
@@ -16,19 +14,19 @@ import {
  */
 class ExampleDto {
   @IsEmail()
-  email: string;
+  email!: string;
 
   @MinLength(8)
-  password: string;
+  password!: string;
 
   @IsString()
-  name: string;
+  name!: string;
 
   @IsNumber()
-  age: number;
+  age!: number;
 
   @IsBoolean()
-  isActive: boolean;
+  isActive!: boolean;
 }
 
 /**
@@ -46,6 +44,10 @@ export const validateDto = async (
   const dtoInstance = plainToClass(dtoClass, data);
   // Validate and return any errors
   const errors = await validate(dtoInstance);
+  if (errors.length > 0) {
+    // Log validation errors for debugging
+    console.error('Validation errors:', errors);
+  }
   return errors;
 };
 
@@ -55,6 +57,9 @@ export const validateDto = async (
 
 /**
  * Validate email format using a regex.
+ *
+ * @param email - The email string to validate
+ * @returns boolean - True if valid, false otherwise
  */
 export const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -66,6 +71,9 @@ export const isValidEmail = (email: string): boolean => {
  *   - at least 8 characters
  *   - at least 1 letter
  *   - at least 1 number
+ *
+ * @param password - The password string to validate
+ * @returns boolean - True if valid, false otherwise
  */
 export const isValidPassword = (password: string): boolean => {
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
@@ -74,6 +82,11 @@ export const isValidPassword = (password: string): boolean => {
 
 /**
  * Validate if a string’s length is within a specified range
+ *
+ * @param str - The string to validate
+ * @param minLength - The minimum length of the string
+ * @param maxLength - The maximum length of the string
+ * @returns boolean - True if valid, false otherwise
  */
 export const isValidString = (
   str: string, 
@@ -85,6 +98,9 @@ export const isValidString = (
 
 /**
  * Validate if a value is a number
+ *
+ * @param value - The value to validate
+ * @returns boolean - True if valid, false otherwise
  */
 export const isNumber = (value: unknown): boolean => {
   return typeof value === 'number' && !isNaN(value);
@@ -92,6 +108,9 @@ export const isNumber = (value: unknown): boolean => {
 
 /**
  * Validate if a value is a boolean
+ *
+ * @param value - The value to validate
+ * @returns boolean - True if valid, false otherwise
  */
 export const isBoolean = (value: unknown): boolean => {
   return typeof value === 'boolean';
@@ -112,7 +131,7 @@ export const isBoolean = (value: unknown): boolean => {
 
   const errors = await validateDto(ExampleDto, data);
   if (errors.length > 0) {
-    console.log('Validation errors:', errors);
+    console.error('Validation errors:', errors);
   } else {
     console.log('Validation passed.');
   }
