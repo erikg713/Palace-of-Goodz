@@ -3,7 +3,6 @@ import Product from '../models/Product';
 import Order from '../models/Order';
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import mongoose from 'mongoose';
 import { body, validationResult } from 'express-validator';
 import logger from '../utils/logger'; // Assuming a custom logger is set up
 
