@@ -1,24 +1,53 @@
-import mongoose, { Document, Schema } from "mongoose";
+import { DataTypes, Model } from 'sequelize';
+import sequelize from '../config/database';
 
-export interface IOrder extends Document {
-  piPaymentId?: string;
-  piTransactionId?: string;
-  product: mongoose.Types.ObjectId;
-  buyer: mongoose.Types.ObjectId;
-  status: "pending" | "completed" | "canceled";
-  createdAt: Date;
+class Order extends Model {
+  public id!: number;
+  public piPaymentId?: string;
+  public piTransactionId?: string;
+  public product!: number; // Assuming a foreign key to product
+  public buyer!: number; // Assuming a foreign key to user
+  public status!: 'pending' | 'completed' | 'canceled';
+  public createdAt!: Date;
+  public updatedAt!: Date;
 }
 
-const OrderSchema = new Schema<IOrder>(
+Order.init(
   {
-    piPaymentId: { type: String, required: false },
-    piTransactionId: { type: String, required: false },
-    product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
-    buyer: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    status: { type: String, enum: ["pending", "completed", "canceled"], default: "pending" },
+    piPaymentId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    piTransactionId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    product: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Products', // Name of the table for products
+        key: 'id',
+      },
+    },
+    buyer: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Users', // Name of the table for users
+        key: 'id',
+      },
+    },
+    status: {
+      type: DataTypes.ENUM('pending', 'completed', 'canceled'),
+      defaultValue: 'pending',
+    },
   },
-  { timestamps: true }
+  {
+    sequelize,
+    modelName: 'Order',
+    timestamps: true,
+  }
 );
 
-const Order = mongoose.model<IOrder>("Order", OrderSchema);
 export default Order;
