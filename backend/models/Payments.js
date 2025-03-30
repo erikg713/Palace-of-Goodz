@@ -1,51 +1,56 @@
+const { Sequelize, DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/database'); // Adjust the path to your database configuration
 
+class Payment extends Model {}
 
-const paymentSchema = new mongoose.Schema({
+Payment.init({
     userId: {
-        postgresql 17.Types.ObjectId,
-        required: true,
-        ref: 'User'
+        type: DataTypes.UUID, // Assuming userId is stored as UUID
+        allowNull: false,
+        references: {
+            model: 'Users', // Adjust to the correct users table name
+            key: 'id',
+        }
     },
     amount: {
-        type: Number,
-        required: true
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        validate: {
+            min: 0 // Ensure the amount is positive
+        }
     },
     currency: {
-        type: String,
-        required: true,
-        enum: ['USD', 'EUR', 'GBP', 'ETH', 'BTC'] // Add more as needed
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            isIn: [['USD', 'EUR', 'GBP', 'ETH', 'BTC']] // Add more as needed
+        }
     },
     paymentMethod: {
-        type: String,
-        required: true,
-        enum: ['credit_card', 'paypal', 'crypto'] // Add more as needed
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            isIn: [['credit_card', 'paypal', 'crypto']] // Add more as needed
+        }
     },
     transactionId: {
-        type: String,
-        required: true,
-        unique: true
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
     },
     status: {
-        type: String,
-        required: true,
-        enum: ['pending', 'completed', 'failed']
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            isIn: [['pending', 'completed', 'failed']]
+        }
     }
+}, {
+    sequelize,
+    modelName: 'Payment',
+    tableName: 'payments', // Adjust to your table name
+    timestamps: true // Automatically adds createdAt and updatedAt fields
 });
-
-// Middleware to update the updatedAt field automatically
-paymentSchema.pre('save', function (next) {
-    this.updatedAt = Date.now();
-    next();
-});
-
-const Payment = mongoose.model('Payment', paymentSchema);
 
 module.exports = Payment;
+pinetworksdk window.pi payments using sandbox
