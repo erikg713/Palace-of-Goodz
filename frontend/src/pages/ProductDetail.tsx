@@ -2,27 +2,50 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchProductById } from '../services/api';
 
+interface Product {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    imageUrl: string;
+}
+
 const ProductDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [product, setProduct] = useState<any>(null);
+    const [product, setProduct] = useState<Product | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         async function getProduct() {
-            const data = await fetchProductById(id);
-            setProduct(data);
+            try {
+                const data = await fetchProductById(id);
+                setProduct(data);
+            } catch (err) {
+                setError('Failed to fetch product details');
+            } finally {
+                setLoading(false);
+            }
         }
 
         getProduct();
     }, [id]);
 
-    if (!product) return <div>Loading...</div>;
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
 
     return (
         <div style={styles.container}>
-            <img src={product.imageUrl} alt={product.name} style={styles.image} />
-            <h2 style={styles.title}>{product.name}</h2>
-            <p style={styles.description}>{product.description}</p>
-            <p style={styles.price}>{product.price} π</p>
+            {product ? (
+                <>
+                    <img src={product.imageUrl} alt={product.name} style={styles.image} />
+                    <h2 style={styles.title}>{product.name}</h2>
+                    <p style={styles.description}>{product.description}</p>
+                    <p style={styles.price}>{product.price} π</p>
+                </>
+            ) : (
+                <div>Product not found</div>
+            )}
         </div>
     );
 };
@@ -49,6 +72,11 @@ const styles = {
     price: {
         fontSize: '1.5rem',
         fontWeight: 'bold',
+        margin: '1rem 0',
+    },
+};
+
+export default ProductDetail;
         margin: '1rem 0',
     },
 };
