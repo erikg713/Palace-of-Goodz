@@ -1,22 +1,48 @@
+:root {
+  --primary-color: #f9f9f9;
+  --secondary-color: #333;
+  --padding: 20px;
+}
+
 .marketplace__container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  background-color: #f9f9f9;
+  padding: var(--padding);
+  background-color: var(--primary-color);
 }
 
 .marketplace__title {
   font-size: 2em;
   font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
+  margin-bottom: var(--padding);
+  color: var(--secondary-color);
 }
 
 .marketplace__product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  gap: var(--padding);
   width: 100%;
   max-width: 1200px;
+}
+
+@media (max-width: 768px) {
+  .marketplace__title {
+    font-size: 1.5em;
+  }
+
+  .marketplace__product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .marketplace__title {
+    font-size: 1.2em;
+  }
+
+  .marketplace__product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
 }
