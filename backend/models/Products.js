@@ -24,9 +24,16 @@ const Product = sequelize.define('Product', {
   },
 }, {
   tableName: 'Products',
-  timestamps: false,
+  timestamps: true, // Enable timestamps
 });
 
+// Sync the table
+sequelize.sync()
+  .then(() => {
+    console.log('Products table has been created.');
+  })
+  .catch(error => {
+    console.error('Unable to create table:', error);
+  });
+
 module.exports = Product;
-ADD CONSTRAINT fk_seller
-FOREIGN KEY (seller) REFERENCES Sellers(id);
