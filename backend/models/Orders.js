@@ -28,8 +28,32 @@ const Order = sequelize.define('Order', {
     defaultValue: 'Pending',
   },
 }, {
+  indexes: [
+    // Add indexes for frequently queried columns
+    {
+      unique: false,
+      fields: ['status'],
+    },
+    {
+      unique: false,
+      fields: ['createdAt'],
+    },
+  ],
   timestamps: true, // Adds createdAt and updatedAt fields
   tableName: 'Orders', // Optional: explicitly specify the table name
 });
+
+// Define associations if necessary
+// Order.associate = function(models) {
+//   Order.belongsTo(models.User, {
+//     foreignKey: 'userId',
+//     as: 'user'
+//   });
+// };
+
+// Add default scope if necessary
+// Order.addScope('defaultScope', {
+//   attributes: { exclude: ['createdAt', 'updatedAt'] },
+// }, { override: true });
 
 module.exports = Order;
