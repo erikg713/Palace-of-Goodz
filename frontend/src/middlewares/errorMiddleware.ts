@@ -1,4 +1,22 @@
 import { Request, Response, NextFunction } from "express";
+import winston from "winston";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// Initialize Winston logger
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.timestamp(),
+    winston.format.printf(({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`)
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+  ],
+});
 
 // Custom error class with additional fields for better error handling
 class AppError extends Error {
@@ -18,7 +36,7 @@ export const errorMiddleware = (err: AppError, req: Request, res: Response, next
 
   // Log error details in non-production environments
   if (!isProduction) {
-    console.error(`Error: ${err.message}\nStack: ${err.stack}\nRequest URL: ${req.url}\nRequest Method: ${req.method}\nRequest Body: ${JSON.stringify(req.body)}`);
+    logger.error(`Error: ${err.message}\nStack: ${err.stack}\nRequest URL: ${req.url}\nRequest Method: ${req.method}\nRequest Body: ${JSON.stringify(req.body)}`);
   }
 
   // Determine the status code and message
@@ -33,7 +51,7 @@ export const errorMiddleware = (err: AppError, req: Request, res: Response, next
 };
 
 // Utility function to create new operational errors
-export const createError = (message: string, statusCode: number) => {
+export const createError = (message: string, statusCode: number): AppError => {
   return new AppError(message, statusCode, true);
 };
 
