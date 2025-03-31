@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { initiatePayment } from '../services/paymentApi';
 import { usePi } from '../contexts/PiContext';
+import { notification } from 'antd'; // Example notification library
 
 interface Product {
   _id: string;
@@ -16,7 +17,10 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
   const handlePurchase = async () => {
     if (!userWallet) {
-      alert('Please connect your Pi Wallet to proceed.');
+      notification.error({
+        message: 'Wallet Not Connected',
+        description: 'Please connect your Pi Wallet to proceed.',
+      });
       return;
     }
 
@@ -24,10 +28,16 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     try {
       // Initiate payment process
       const payment = await initiatePayment(product.price, product._id, userWallet);
-      alert('Payment initiated. Please complete it in the Pi Wallet app.');
+      notification.success({
+        message: 'Payment Initiated',
+        description: 'Please complete it in the Pi Wallet app.',
+      });
     } catch (error) {
       console.error('Payment failed:', error);
-      alert('Payment could not be processed. Please try again later.');
+      notification.error({
+        message: 'Payment Failed',
+        description: 'Payment could not be processed. Please try again later.',
+      });
     } finally {
       setIsProcessing(false);
     }
@@ -35,7 +45,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
   return (
     <div className="product-card">
-      <img src={product.imageUrl} alt={product.name} />
+      <img src={product.imageUrl} alt={`Image of ${product.name}`} />
       <h3>{product.name}</h3>
       <p>{product.description}</p>
       <p>{product.price} π</p>
