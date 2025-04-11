@@ -92,3 +92,25 @@ app.get('/orders', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { connectToDatabase } from './db.js';
+
+import authRoutes from './routes/auth.js';
+import paymentRoutes from './routes/payment.js';
+import adminRoutes from './routes/admin.js';
+
+dotenv.config();
+const app = express();
+connectToDatabase();
+
+app.use(cors());
+app.use(express.json());
+
+app.use('/auth', authRoutes);
+app.use('/payment', paymentRoutes);
+app.use('/', adminRoutes);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
