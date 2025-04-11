@@ -3,7 +3,27 @@ import { registerUser, loginUser } from '../controllers/authController';
 import { validateRegister, validateLogin } from '../utils/validators';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
+import express from 'express';
+import fetch from 'node-fetch';
 
+const router = express.Router();
+const PI_API_URL = 'https://api.minepi.com';
+
+router.post('/verify', async (req, res) => {
+  const { accessToken } = req.body;
+  try {
+    const response = await fetch(`${PI_API_URL}/me`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const user = await response.json();
+    res.json({ verified: true, user });
+  } catch (err) {
+    console.error('Auth verification failed:', err);
+    res.status(401).json({ verified: false });
+  }
+});
+
+export default router;
 const router = express.Router();
 
 // Apply security headers
