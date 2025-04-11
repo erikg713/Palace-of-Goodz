@@ -1,3 +1,16 @@
+import mongoose from 'mongoose';
+
+const orderSchema = new mongoose.Schema({
+  username: String,
+  productId: String,
+  txid: String,
+  paymentId: String,
+  status: { type: String, default: 'pending' },
+  createdAt: { type: Date, default: Date.now }
+});
+
+export default mongoose.model('Order', orderSchema);
+
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database'); // Import your Sequelize instance
 
