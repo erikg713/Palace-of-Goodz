@@ -1,4 +1,35 @@
 import express from 'express';
+import Order from '../models/Order.js';
+
+const router = express.Router();
+
+router.post('/approve', async (req, res) => {
+  const { paymentId } = req.body;
+  try {
+    console.log('Approving payment:', paymentId);
+    res.json({ status: 'approved' });
+  } catch (err) {
+    console.error('Payment approval error:', err);
+    res.status(500).json({ status: 'failed' });
+  }
+});
+
+router.post('/complete', async (req, res) => {
+  const { paymentId, txid, username, productId } = req.body;
+  try {
+    const newOrder = new Order({ paymentId, txid, username, productId, status: 'completed' });
+    await newOrder.save();
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Payment completion error:', err);
+    res.status(500).json({ success: false });
+  }
+});
+
+export default router;
+
+
+import express from 'express';
 import PiNetwork from 'pi-backend';
 import dotenv from 'dotenv';
 import { db } from '../config/db.js'; // Ensure your DB connection exports a `query` method
