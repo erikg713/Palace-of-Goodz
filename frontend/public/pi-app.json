@@ -1,0 +1,13 @@
+{
+  "name": "Palace of Goodz",
+  "description": "A decentralized marketplace powered by Pi cryptocurrency. Browse, buy, and sell artisan goods directly in the Pi ecosystem.",
+  "icon": "https://palaceofgoodz.com/logo.png",
+  "access": {
+    "dev": ["erikg713uknowme"], 
+    "public": true
+  },
+  "permissions": ["username", "payments"],
+  "api": {
+    "version": "2.0"
+  }
+}
