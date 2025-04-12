@@ -8,3 +8,8 @@ script src="https://sdk.minepi.com/pi-sdk.js"></script>
 </script>
 
 createApp(App).use(router).mount('#app')
+const payment = await window.Pi.createPayment({
+  amount: '400',
+  memo: 'Purchase: Item #123',
+  metadata: { orderId: 'abc123' }
+});
