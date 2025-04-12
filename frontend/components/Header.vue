@@ -14,6 +14,11 @@
 </template>
 
 <script setup>
+  script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+  Pi.init({ version: "2.0", sandbox: true });
+</script>
+
 function authenticateWithPi() {
   const scopes = ['username', 'payments']
   Pi.authenticate(scopes, (payment) => {
