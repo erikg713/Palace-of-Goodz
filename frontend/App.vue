@@ -15,4 +15,7 @@ import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 import PrivacyPolicyModal from './components/PrivacyPolicyModal.vue'
 import TermsOfServiceModal from './components/TermsOfServiceModal.vue'
+script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+  Pi.init({ version: "2.0", sandbox: true });
 </script>
