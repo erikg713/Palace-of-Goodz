@@ -1,4 +1,8 @@
 // File: frontend/src/pages/HomePage.vue <template>
+script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+  Pi.init({ version: "2.0", sandbox: true });
+</script>
 
   <section class="max-w-6xl mx-auto py-8">
     <h2 class="text-2xl font-bold mb-6 text-center">Featured Goodz</h2>
