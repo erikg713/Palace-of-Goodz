@@ -1,3 +1,14 @@
+import { loginPi } from '@/utils/piAuth';
+
+async function authenticateWithPi() {
+  try {
+    const auth = await loginPi();
+    console.log(auth.user);
+  } catch (err) {
+    console.error('Pi auth failed', err);
+  }
+}
+
 // File: frontend/src/pages/HomePage.vue <template>
 script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
