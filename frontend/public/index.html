@@ -1,90 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palace of Goodz</title>
-    <meta name="description" content="A Web3-powered decentralized marketplace">
-    <meta property="og:title" content="Palace of Goodz">
-    <meta property="og:description" content="A Web3-powered decentralized marketplace">
-    <meta property="og:url" content="https://yourdomain.com">
-    <meta property="og:type" content="website">
-    <meta name="keywords" content="Web3, decentralized, marketplace, blockchain, crypto">
-    <meta name="author" content="Your Name or Company">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://sdk.minepi.com;">
-    <style>
-        /* Critical CSS */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        header, footer {
-            background-color: #333;
-            color: white;
-            padding: 10px 0;
-            text-align: center;
-        }
-        main {
-            padding: 20px;
-        }
-    </style>
-    <noscript>
-        <link rel="stylesheet" href="/styles.css">
-    </noscript>
+<!-- File: frontend/public/index.html --><!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Palace of Goodz</title>
+  <meta name="description" content="A Pi-powered marketplace for artisan goods" />
+  <link rel="icon" href="/logo.png" type="image/png" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9fafb;
+      color: #111;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      padding: 1rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      margin-bottom: 2rem;
+      color: #555;
+    }
+    .button {
+      background: #facc15;
+      color: #111;
+      padding: 0.75rem 1.5rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .footer-links {
+      margin-top: 2rem;
+      font-size: 0.875rem;
+    }
+    .footer-links a {
+      color: #555;
+      text-decoration: underline;
+      margin: 0 0.5rem;
+    }
+  </style>
 </head>
 <body>
-    <header role="banner">
-        <h1>Welcome to the Palace of Goodz</h1>
-    </header>
-    <main role="main">
-        <!-- Page content -->
-    </main>
-    <footer role="contentinfo">
-        <p>© 2025 Palace of Goodz. All rights reserved.</p>
-    </footer>
-    <script>
-        // Initialize Pi SDK
-        function initializePiSDK() {
-            Pi.init({ version: "2.0", sandbox: true });
-            const scopes = ['payments'];
-
-            function onIncompletePaymentFound(payment) {
-                const paymentId = payment.identifier;
-                const txid = payment.transaction.txid;
-                fetch('/payment/complete', {
-                    method: 'POST',
-                    body: JSON.stringify({ paymentId, txid, debug: 'cancel' }),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            }
-
-            Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
-                console.log('Pi SDK Initialized!');
-            }).catch(function(error) {
-                console.error('Pi SDK Initialization Error:', error);
-            });
-        }
-
-        // Load Pi SDK script and initialize
-        (function() {
-            var script = document.createElement('script');
-            script.src = 'https://sdk.minepi.com/pi-sdk.js';
-            script.onload = initializePiSDK;
-            document.head.appendChild(script);
-        })();
-
-        // Lazy load non-critical scripts
-        function loadScript(src) {
-            var script = document.createElement('script');
-            script.src = src;
-            script.async = true;
-            document.head.appendChild(script);
-        }
-        loadScript('/path/to/your/script.js');
-    </script>
+  <img src="/logo.png" alt="Palace of Goodz Logo" style="width: 80px; height: 80px; margin-bottom: 1rem;" />
+  <h1>Welcome to Palace of Goodz</h1>
+  <p>A decentralized marketplace built for Pioneers.</p>
+  <a href="/" class="button">Enter Marketplace</a>  <div class="footer-links">
+    <a href="#" onclick="window.__PrivacyPolicyModal__.value = true">Privacy Policy</a>
+    |
+    <a href="#" onclick="window.__TermsOfServiceModal__.value = true">Terms of Service</a>
+  </div>
 </body>
 </html>
-
- 
