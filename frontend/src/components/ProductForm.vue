@@ -48,6 +48,17 @@ const submitProduct = async () => {
       <label class="block font-semibold">Image URL</label>
       <input v-model="form.imageUrl" class="w-full border rounded px-3 py-2" />
     </div>
+    <div>
+  <label class="block font-semibold">Category</label>
+  <select v-model="form.category" class="w-full border rounded px-3 py-2">
+    <option value="">Select Category</option>
+    <option value="clothing">Clothing</option>
+    <option value="accessories">Accessories</option>
+    <option value="collectibles">Collectibles</option>
+    <option value="tech">Tech</option>
+    <option value="other">Other</option>
+  </select>
+</div>
     <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Add Product</button>
   </form>
 </template>
