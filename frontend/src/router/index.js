@@ -9,3 +9,7 @@ export default createRouter({
   history: createWebHistory(),
   routes
 })
+{
+  path: '/admin',
+  component: () => import('@/views/Admin.vue')
+}
