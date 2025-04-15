@@ -4,7 +4,11 @@ import dotenv from 'dotenv';
 import paymentRoutes from './routes/paymentRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import mongoose from 'mongoose';
+import { createApp } from 'vue'
 
+const app = createApp({
+  /* root component options */
+})
 dotenv.config(); // Load environment variables
 
 const app = express();
