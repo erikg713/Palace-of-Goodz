@@ -1,28 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomePage from '../pages/HomePage.vue'
-import AdminPanel from '../pages/AdminPanel.vue'
-script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script>
-  Pi.init({ version: "2.0", sandbox: true });
-</script>
+import Home from '@/views/Home.vue'
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: HomePage
-  },
-  {
-    path: '/admin',
-    name: 'AdminPanel',
-    component: AdminPanel
-  }
+  { path: '/', name: 'Home', component: Home },
 ]
 
-const router = createRouter({
+export default createRouter({
   history: createWebHistory(),
   routes
 })
-
-export default router
-
