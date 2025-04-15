@@ -1,12 +1,12 @@
 import { ValidationError } from 'class-validator';
 import { plainToClass } from 'class-transformer';
-import { 
-  validate, 
-  IsEmail, 
-  MinLength, 
-  IsString, 
-  IsNumber, 
-  IsBoolean 
+import {
+  validate,
+  IsEmail,
+  MinLength,
+  IsString,
+  IsNumber,
+  IsBoolean,
 } from 'class-validator';
 
 /**
@@ -37,18 +37,20 @@ class ExampleDto {
  * @param data - The plain data object to validate
  */
 export const validateDto = async (
-  dtoClass: new (...args: any[]) => any, 
+  dtoClass: new (...args: any[]) => any,
   data: unknown
 ): Promise<ValidationError[]> => {
-  // Convert plain data into a class instance for class-validator
   const dtoInstance = plainToClass(dtoClass, data);
-  // Validate and return any errors
-  const errors = await validate(dtoInstance);
-  if (errors.length > 0) {
-    // Log validation errors for debugging
-    console.error('Validation errors:', errors);
+  try {
+    const errors = await validate(dtoInstance);
+    if (errors.length > 0) {
+      console.error('Validation errors:', errors);
+    }
+    return errors;
+  } catch (err) {
+    console.error('Error during validation:', err);
+    throw err;
   }
-  return errors;
 };
 
 // --------------------------------------------
@@ -61,27 +63,23 @@ export const validateDto = async (
  * @param email - The email string to validate
  * @returns boolean - True if valid, false otherwise
  */
-export const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
+export const isValidEmail = (email: string): boolean =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 /**
  * Validate password strength:
- *   - at least 8 characters
- *   - at least 1 letter
- *   - at least 1 number
+ *   - At least 8 characters
+ *   - At least 1 letter
+ *   - At least 1 number
  *
  * @param password - The password string to validate
  * @returns boolean - True if valid, false otherwise
  */
-export const isValidPassword = (password: string): boolean => {
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  return passwordRegex.test(password);
-};
+export const isValidPassword = (password: string): boolean =>
+  /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
 
 /**
- * Validate if a string’s length is within a specified range
+ * Validate if a string's length is within a specified range.
  *
  * @param str - The string to validate
  * @param minLength - The minimum length of the string
@@ -89,32 +87,28 @@ export const isValidPassword = (password: string): boolean => {
  * @returns boolean - True if valid, false otherwise
  */
 export const isValidString = (
-  str: string, 
-  minLength: number, 
+  str: string,
+  minLength: number,
   maxLength: number
-): boolean => {
-  return str.length >= minLength && str.length <= maxLength;
-};
+): boolean => str.length >= minLength && str.length <= maxLength;
 
 /**
- * Validate if a value is a number
+ * Validate if a value is a number.
  *
  * @param value - The value to validate
  * @returns boolean - True if valid, false otherwise
  */
-export const isNumber = (value: unknown): boolean => {
-  return typeof value === 'number' && !isNaN(value);
-};
+export const isNumber = (value: unknown): boolean =>
+  typeof value === 'number' && !isNaN(value);
 
 /**
- * Validate if a value is a boolean
+ * Validate if a value is a boolean.
  *
  * @param value - The value to validate
  * @returns boolean - True if valid, false otherwise
  */
-export const isBoolean = (value: unknown): boolean => {
-  return typeof value === 'boolean';
-};
+export const isBoolean = (value: unknown): boolean =>
+  typeof value === 'boolean';
 
 // --------------------------------------------
 // Example usage of validateDto function
