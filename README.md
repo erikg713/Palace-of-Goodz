@@ -64,100 +64,33 @@ Palace of Goods is a decentralized marketplace that allows users to buy and sell
 ---
 
 ### FRONTEND FILE STRUCTURE ###
-frontend/
+palace-of-goodz/
 ├── public/
-│   ├── index.html
-│   ├── favicon.ico
-│   └── manifest.json
+│   └── index.html
 ├── src/
-│   ├── assets/
-│   │   ├── images/
-│   │   │   ├── logo.png
-│   │   │   └── background.jpg
-│   │   ├── fonts/
-│   │   │   ├── OpenSans-Regular.ttf
-│   │   │   └── OpenSans-Bold.ttf
-│   │   └── styles/
-│   │       ├── base/
-│   │       │   ├── _reset.css
-│   │       │   └── _typography.css
-│   │       ├── layout/
-│   │       │   ├── _grid.css
-│   │       │   └── _header.css
-│   │       ├── components/
-│   │       │   ├── _button.css
-│   │       │   ├── _form.css
-│   │       │   └── _navbar.css
-│   │       ├── utilities/
-│   │       │   ├── _margin.css
-│   │       │   ├── _padding.css
-│   │       │   └── _text-align.css
-│   │       └── main.css
-│   ├── components/
-│   │   ├── Navbar.tsx
-│   │   ├── Footer.tsx
-│   │   ├── Button.tsx
-│   │   ├── Form.tsx
-│   │   └── Modal.tsx
-│   ├── hooks/
-│   │   ├── useAuth.ts
-│   │   ├── useFetch.ts
-│   │   └── useTheme.ts
-│   ├── pages/
-│   │   ├── Home.tsx
-│   │   ├── About.tsx
-│   │   ├── Contact.tsx
-│   │   ├── Dashboard.tsx
-│   │   └── NotFound.tsx
-│   ├── redux/
-│   │   ├── store.ts
-│   │   ├── reducers/
-│   │   │   ├── authReducer.ts
-│   │   │   └── productReducer.ts
-│   │   ├── actions/
-│   │   │   ├── authActions.ts
-│   │   │   └── productActions.ts
-│   │   └── types/
-│   │       ├── authTypes.ts
-│   │       └── productTypes.ts
-│   ├── routes/
-│   │   ├── PrivateRoute.tsx
-│   │   ├── PublicRoute.tsx
-│   │   └── AppRoutes.tsx
-│   ├── services/
-│   │   ├── api.ts
-│   │   ├── authService.ts
-│   │   └── productService.ts
-│   ├── utils/
-│   │   ├── validation.ts
-│   │   ├── helpers.ts
-│   │   └── constants.ts
-│   ├── App.tsx
-│   ├── index.tsx
-│   └── styles/
-│       ├── global.css
-│       └── theme.ts
-└── ...
+│   ├── pi/
+│   │   ├── sdk.js
+│   │   └── payments.js
+│   ├── views/
+│   │   └── Home.vue
+│   ├── App.vue
+│   ├── main.js
+│   └── router/
+│       └── index.js
+├── vite.config.js
+├── package.json
 
-## Getting Started
-
-1. Create a new Next.js app with TypeScript:
-   ```bash
-   npx create-next-app@latest palace-of-goods --typescript
-   cd palace-of-goods
-   ```
-
-2. Ensure you have the following installed on your system:
-   - Node.js (16+) & npm/yarn
-   - Postgresql (17+)
-   - Docker (Optional for deployment)
-
-3. Install necessary dependencies:
-   ```bash
-   npm install next-auth bcryptjs jsonwebtoken web3js @types/jsonwebtoken @types/bcryptjs @types/web3js
-   ```
-
----
+### Backend File Structure 
+backend/
+├── controllers/
+│   └── paymentController.js
+├── routes/
+│   └── paymentRoutes.js
+├── utils/
+│   └── verifyUser.js
+├── server.js
+├── .env
+├── package.json
 
 ## Installation
 
