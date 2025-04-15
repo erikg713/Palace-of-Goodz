@@ -220,6 +220,8 @@ w the installation instructions for your operating system.
     ```bash
     npm run migrate  # Apply database migrations
     npm run dev      # Start development server
+    npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
     ```
 
 5. **Verify that the backend server is running by accessing:**
