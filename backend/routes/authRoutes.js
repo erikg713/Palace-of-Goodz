@@ -5,6 +5,17 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import express from 'express';
 import fetch from 'node-fetch';
+import express from 'express'
+import { registerUser, loginUser } from '../controllers/authController'
+import { registerValidation, loginValidation } from '../validators/authValidators'
+import asyncHandler from 'express-async-handler'
+
+const router = express.Router()
+
+router.post('/register', registerValidation, asyncHandler(registerUser))
+router.post('/login', loginValidation, asyncHandler(loginUser))
+
+export default router
 
 const router = express.Router();
 const PI_API_URL = 'https://api.minepi.com';
