@@ -75,3 +75,6 @@ watchEffect(() => {
   fetchProducts()
 })
 </script>
+<h3 class="font-bold text-lg">{{ p.name }} - {{ p.price }}π</h3>
+<p class="text-xs text-purple-600 font-medium uppercase">{{ p.category }}</p>
+<p class="text-sm text-gray-600">{{ p.description }}</p>
