@@ -108,8 +108,8 @@ cd palace-of-goods
    cd server
    npm install
    npm install node-cron @pinetwork-js/sdk web3 dotenv express fs moment
+   node scripts/seedProducts.js
    ```
-
 2. Apply database migrations and start the development server:
    ```bash
    npm run migrate  # Apply database migrations
