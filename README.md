@@ -1,6 +1,6 @@
 # Palace of Goodz
 
-A Web3-powered decentralized marketplace using Node.js, Express, and React-Vue (TypeScript).
+A Web3-powered decentralized marketplace using Node.js, Express, and Vue (TypeScript).
 
 ---
 
