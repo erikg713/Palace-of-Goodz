@@ -50,7 +50,7 @@ Palace of Goods is a decentralized marketplace that allows users to buy and sell
 - **Docker** – Containerized development & production
 - **PM2** – Process management for production
 
-### Frontend (React.js/Next.js with TypeScript)
+### Frontend (Vue.js with TypeScript)
 
 - **Vue.js (TypeScript)** – Type-safe and scalable UI
 - **Redux Toolkit (Future)** – State management for better UX
