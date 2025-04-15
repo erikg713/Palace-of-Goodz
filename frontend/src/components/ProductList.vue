@@ -17,7 +17,7 @@ const fetchProducts = async () => {
   const res = await fetch('http://localhost:5000/products')
   products.value = await res.json()
 }
-
+<p class="text-xs text-purple-600 font-medium uppercase">{{ p.category }}</p>
 const deleteProduct = async (id) => {
   await fetch(`http://localhost:5000/products/${id}`, {
     method: 'DELETE',
