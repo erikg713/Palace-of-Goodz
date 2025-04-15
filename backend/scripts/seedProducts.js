@@ -28,3 +28,19 @@ async function seed() {
 }
 
 seed()
+const sampleProducts = [
+  {
+    name: 'Pi T-Shirt',
+    description: 'Cool black tee with Pi symbol',
+    price: 3.14,
+    imageUrl: 'https://example.com/tshirt.jpg',
+    category: 'clothing'
+  },
+  {
+    name: 'Pi Mug',
+    description: 'Ceramic mug for Pioneers',
+    price: 1.59,
+    imageUrl: 'https://example.com/mug.jpg',
+    category: 'accessories'
+  }
+]
