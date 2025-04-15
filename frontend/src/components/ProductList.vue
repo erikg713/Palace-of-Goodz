@@ -28,3 +28,50 @@ const deleteProduct = async (id) => {
 
 onMounted(fetchProducts)
 </script>
+
+<template>
+  <div class="grid gap-4">
+    <div
+      v-for="p in products"
+      :key="p._id"
+      class="border rounded p-4 shadow flex items-center justify-between"
+    >
+      <div>
+        <h3 class="font-bold text-lg">{{ p.name }} - {{ p.price }}π</h3>
+        <p class="text-sm text-gray-600">{{ p.description }}</p>
+      </div>
+      <button
+        @click="deleteProduct(p._id)"
+        class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, watchEffect } from 'vue'
+import { useToken } from '@/pi/token'
+const { token } = useToken()
+
+const props = defineProps(['refreshKey'])
+const products = ref([])
+
+const fetchProducts = async () => {
+  const res = await fetch('http://localhost:5000/products')
+  products.value = await res.json()
+}
+
+const deleteProduct = async (id) => {
+  await fetch(`http://localhost:5000/products/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token.value}` }
+  })
+  await fetchProducts()
+}
+
+watchEffect(() => {
+  fetchProducts()
+})
+</script>
