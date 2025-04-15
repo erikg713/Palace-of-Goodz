@@ -33,7 +33,7 @@ Palace of Goods is a decentralized marketplace that allows users to buy and sell
 - ✅ Secure transactions with blockchain integration
 - ✅ JWT-based user authentication for secure access
 - ✅ Node.js & Express.js backend with PostgreSQL database
-- ✅ React.js (TypeScript) frontend for an optimized UI/UX
+- ✅ Vue.js (TypeScript) frontend for an optimized UI/UX
 - ✅ Redux Toolkit (planned) for state management
 - ✅ Cross-chain transactions (Ethereum, Bitcoin, Polygon) - Future expansion
 
@@ -52,7 +52,7 @@ Palace of Goods is a decentralized marketplace that allows users to buy and sell
 
 ### Frontend (React.js/Next.js with TypeScript)
 
-- **React.js (TypeScript)** – Type-safe and scalable UI
+- **Vue.js (TypeScript)** – Type-safe and scalable UI
 - **Redux Toolkit (Future)** – State management for better UX
 - **Material-UI** – Modern component-based UI framework
 
