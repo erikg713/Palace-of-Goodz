@@ -14,7 +14,13 @@ import { useToken } from '@/pi/token'
 const emit = defineEmits(['product-added'])
 const { token } = useToken()
 
-const form = ref({ name: '', description: '', price: '', imageUrl: '' })
+const form = ref({
+  name: '',
+  description: '',
+  price: '',
+  imageUrl: '',
+  category: ''
+})
 
 const submitProduct = async () => {
   const res = await fetch('http://localhost:5000/products', {
