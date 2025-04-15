@@ -1,47 +1,70 @@
-import express from 'express';
-import { createOrder, getOrder, updateOrder, deleteOrder } from '../controllers/orderController';
-import { validateOrder } from '../utils/validators';
-import { authMiddleware, errorHandler } from '../middleware';
+// routes/orderRoutes.js
+import express from 'express'
+import asyncHandler from 'express-async-handler'
+import {
+  createOrder,
+  getOrder,
+  updateOrder,
+  deleteOrder
+} from '../controllers/orderController.js'
 
-const router = express.Router();
+import {
+  validateNewOrder,
+  validateOrderUpdate
+} from '../utils/validators.js'
 
-// Route to create a new order
-router.post('/', authMiddleware, validateOrder, async (req, res, next) => {
-  try {
-    await createOrder(req, res);
-  } catch (error) {
-    next(error);
-  }
-});
+import { authMiddleware } from '../middleware/authMiddleware.js'
+import { errorHandler } from '../middleware/errorHandler.js'
 
-// Route to get an order by ID
-router.get('/:id', authMiddleware, async (req, res, next) => {
-  try {
-    await getOrder(req, res);
-  } catch (error) {
-    next(error);
-  }
-});
+const router = express.Router()
 
-// Route to update an order by ID
-router.put('/:id', authMiddleware, validateOrder, async (req, res, next) => {
-  try {
-    await updateOrder(req, res);
-  } catch (error) {
-    next(error);
-  }
-});
+/**
+ * @route   POST /orders
+ * @desc    Create a new order
+ * @access  Protected
+ */
+router.post(
+  '/',
+  authMiddleware,
+  validateNewOrder,
+  asyncHandler(createOrder)
+)
 
-// Route to delete an order by ID
-router.delete('/:id', authMiddleware, async (req, res, next) => {
-  try {
-    await deleteOrder(req, res);
-  } catch (error) {
-    next(error);
-  }
-});
+/**
+ * @route   GET /orders/:id
+ * @desc    Get order details by ID
+ * @access  Protected
+ */
+router.get(
+  '/:id',
+  authMiddleware,
+  asyncHandler(getOrder)
+)
 
-// Error handling middleware
-router.use(errorHandler);
+/**
+ * @route   PUT /orders/:id
+ * @desc    Update an existing order
+ * @access  Protected
+ */
+router.put(
+  '/:id',
+  authMiddleware,
+  validateOrderUpdate,
+  asyncHandler(updateOrder)
+)
 
-export default router;
+/**
+ * @route   DELETE /orders/:id
+ * @desc    Delete an order by ID
+ * @access  Protected
+ */
+router.delete(
+  '/:id',
+  authMiddleware,
+  asyncHandler(deleteOrder)
+)
+
+// Centralized error handler
+router.use(errorHandler)
+
+export default router
