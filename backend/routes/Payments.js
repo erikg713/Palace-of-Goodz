@@ -48,3 +48,38 @@ router.post('/complete', authenticate, async (req, res) => {
 });
 
 export default router;
+// routes/payments.js
+const express = require('express');
+const router = express.Router();
+const axios = require('axios');
+
+router.post('/approve', async (req, res) => {
+  const { paymentId } = req.body;
+
+  try {
+    const response = await axios.post(`https://api.minepi.com/v2/payments/${paymentId}/approve`, {}, {
+      headers: { Authorization: `Key ${process.env.PI_API_KEY}` }
+    });
+
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: 'Approval failed' });
+  }
+});
+
+router.post('/complete', async (req, res) => {
+  const { paymentId, txid } = req.body;
+
+  try {
+    const response = await axios.post(`https://api.minepi.com/v2/payments/${paymentId}/complete`, { txid }, {
+      headers: { Authorization: `Key ${process.env.PI_API_KEY}` }
+    });
+
+    // TODO: Update your order as "paid" here
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: 'Completion failed' });
+  }
+});
+
+module.exports = router;
