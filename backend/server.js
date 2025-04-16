@@ -49,3 +49,11 @@ const ENV = process.env.NODE_ENV || 'development';
 app.listen(PORT, () => {
   console.log(`Server running in ${ENV} mode at http://localhost:${PORT}`);
 });
+// server.js
+import app from './app.js';
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
