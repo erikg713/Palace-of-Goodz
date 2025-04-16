@@ -62,3 +62,26 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 };
 
 export default ProductCard;
+<template>
+  <div class="border rounded p-4 shadow flex items-center justify-between">
+    <div>
+      <h3 class="font-bold text-lg">{{ product.name }} - {{ product.price }}π</h3>
+      <p class="text-sm text-gray-600">{{ product.description }}</p>
+      <p class="text-xs text-purple-600 font-medium uppercase">{{ product.category }}</p>
+    </div>
+    <button
+      @click="$emit('delete', product._id)"
+      class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+    >
+      Delete
+    </button>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    product: { type: Object, required: true },
+  },
+};
+</script>
