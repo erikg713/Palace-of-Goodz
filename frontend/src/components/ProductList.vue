@@ -103,3 +103,22 @@ watchEffect(() => {
 <h3 class="font-bold text-lg">{{ p.name }} - {{ p.price }}π</h3>
 <p class="text-xs text-purple-600 font-medium uppercase">{{ p.category }}</p>
 <p class="text-sm text-gray-600">{{ p.description }}</p>
+<!-- ProductList.vue -->
+<template>
+  <div>
+    <ProductCard v-for="product in products" :key="product.id" :product="product" />
+  </div>
+</template>
+
+<script>
+import ProductCard from './ProductCard.vue';
+
+export default {
+  components: { ProductCard },
+  data() {
+    return {
+      products: [{ id: 1, name: 'Phone' }, { id: 2, name: 'Laptop' }],
+    };
+  },
+};
+</script>
