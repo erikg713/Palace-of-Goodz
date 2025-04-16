@@ -190,3 +190,64 @@ export default function usePiPayments() {
     confirmPiPayment
   };
 }
+import { ref } from 'vue';
+import { createPiPayment, verifyPiPayment } from '@/modules/payments/services/piPaymentService';
+
+export default function usePiPayments() {
+  const paymentStatus = ref(null);
+  const paymentError = ref(null);
+  const isLoading = ref(false);
+  const verificationTimeout = ref(null);
+
+  const initiatePiPayment = async (paymentDetails) => {
+    isLoading.value = true;
+    paymentStatus.value = 'pending';
+    paymentError.value = null;
+
+    try {
+      const payment = await createPiPayment(paymentDetails);
+      paymentStatus.value = 'initiated';
+      return payment;
+    } catch (error) {
+      paymentStatus.value = 'failed';
+      paymentError.value = error;
+      console.error("Payment initiation failed:", error);
+      throw error;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const confirmPiPayment = async (paymentId) => {
+    isLoading.value = true;
+    paymentStatus.value = 'verifying';
+    paymentError.value = null;
+
+    try {
+      const verification = await verifyPiPayment(paymentId);
+      paymentStatus.value = 'completed';
+      return verification;
+    } catch (error) {
+      paymentStatus.value = 'verification_failed';
+      paymentError.value = error;
+      console.error("Payment verification failed:", error);
+      throw error;
+    } finally {
+      isLoading.value = false;
+      clearTimeout(verificationTimeout.value); // Clear timeout if verification completes
+    }
+  };
+
+  const setVerificationTimeout = (timeoutCallback, delay) => {
+    verificationTimeout.value = setTimeout(timeoutCallback, delay);
+  };
+
+  return {
+    paymentStatus,
+    paymentError,
+    isLoading,
+    initiatePiPayment,
+    confirmPiPayment,
+    setVerificationTimeout,
+  };
+}
