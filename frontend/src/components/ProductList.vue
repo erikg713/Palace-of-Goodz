@@ -1,5 +1,23 @@
 <template>
   <div>
+    <h1>Products</h1>
+    <ProductCard v-for="product in products" :key="product.id" :product="product" />
+  </div>
+</template>
+
+<script setup>
+import ProductCard from '@/modules/products/components/ProductCard.vue';
+import useProducts from '@/modules/products/composables/useProducts';
+
+const { products, loadProducts } = useProducts();
+
+loadProducts();
+</script>
+
+
+
+<template>
+  <div>
     <h1>Product List</h1>
     <ul>
       <li v-for="product in products" :key="product._id">
