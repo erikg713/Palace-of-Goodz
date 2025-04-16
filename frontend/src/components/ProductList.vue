@@ -1,4 +1,29 @@
 <template>
+  <div>
+    <h1>Product List</h1>
+    <ul>
+      <li v-for="product in products" :key="product._id">
+        {{ product.name }} - ${{ product.price }}
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+import { getProducts } from '../services/api';
+
+export default {
+  data() {
+    return { products: [] };
+  },
+  async created() {
+    this.products = await getProducts();
+  },
+};
+</script>
+
+
+<template>
   <div v-for="p in products" :key="p._id">
     <h3>{{ p.name }} - {{ p.price }}π</h3>
     <p>{{ p.description }}</p>
