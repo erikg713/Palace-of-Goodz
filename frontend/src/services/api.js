@@ -18,3 +18,31 @@ export const createProduct = async (data) => {
 };
 
 // Add other methods like updateProduct and deleteProduct
+
+
+import axios from 'axios'
+
+const API_URL = 'http://localhost:3000/api' // Change to your backend URL
+
+// User APIs
+export function signupUser(data) {
+  return axios.post(`${API_URL}/users/signup`, data)
+}
+export function loginUser(data) {
+  return axios.post(`${API_URL}/users/login`, data)
+}
+export function getUserProfile(token) {
+  return axios.get(`${API_URL}/users/profile`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+}
+
+// Product APIs
+export function getProducts() {
+  return axios.get(`${API_URL}/products`)
+}
+export function addProduct(data, token) {
+  return axios.post(`${API_URL}/products`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+}
