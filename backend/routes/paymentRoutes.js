@@ -1,23 +1,16 @@
-import express from 'express'
-import { approvePayment, completePayment } from '../controllers/paymentController.js'
-import { authenticate } from '../middleware/auth.js'
+import express from 'express';
+import axios from 'axios';
+import { authenticate } from '../middleware/auth.js';
 
-const router = express.Router()
-router.post('/approve', authenticate, approvePayment)
-router.post('/complete', authenticate, completePayment)
-
-const express = require('express');
-const axios = require('axios');
 const router = express.Router();
-
 const PI_API_KEY = process.env.PI_API_KEY;
 
 // Approve the payment
-router.post('/approve', async (req, res) => {
+router.post('/approve', authenticate, async (req, res) => {
   const { paymentId } = req.body;
 
   try {
-    const response = await axios.post(
+    await axios.post(
       'https://api.minepi.com/payments/approve',
       { paymentId },
       {
@@ -36,11 +29,11 @@ router.post('/approve', async (req, res) => {
 });
 
 // Complete the payment
-router.post('/complete', async (req, res) => {
+router.post('/complete', authenticate, async (req, res) => {
   const { paymentId, txid } = req.body;
 
   try {
-    const response = await axios.post(
+    await axios.post(
       'https://api.minepi.com/payments/complete',
       { paymentId, txid },
       {
@@ -60,4 +53,4 @@ router.post('/complete', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
