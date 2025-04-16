@@ -62,3 +62,15 @@ export default function usePiPayments() {
     confirmPiPayment
   };
 }
+import { ref } from 'vue';
+let createPiPayment, verifyPiPayment;
+
+if (process.env.NODE_ENV === 'development') {
+  const mockService = require('@/modules/payments/services/mockPiPaymentService');
+  createPiPayment = mockService.createPiPayment;
+  verifyPiPayment = mockService.verifyPiPayment;
+} else {
+  const realService = require('@/modules/payments/services/piPaymentService');
+  createPiPayment = realService.createPiPayment;
+  verifyPiPayment = realService.verifyPiPayment;
+}
