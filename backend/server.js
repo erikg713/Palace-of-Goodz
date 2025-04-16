@@ -23,6 +23,8 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+const paymentRoutes = require('./routes/payment');
+app.use('/api/payment', paymentRoutes);
 app.use('/products', productRoutes);
 app.use('/payment', paymentRoutes);
 
