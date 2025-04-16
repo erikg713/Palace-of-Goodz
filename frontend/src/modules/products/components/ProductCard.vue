@@ -1,3 +1,23 @@
+<!-- src/modules/products/components/ProductCard.vue -->
+<template>
+  <div class="product-card">
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.description }}</p>
+  </div>
+</template>
+
+<script setup>
+  import { defineProps } from 'vue';
+
+  defineProps({
+    product: {
+      type: Object,
+      required: true
+    }
+  });
+</script>
+
+
 <template>
   <div class="product-card">
     <img :src="product.imageUrl" :alt="`Image of ${product.name}`" />
