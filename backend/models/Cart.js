@@ -1,44 +1,27 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-  host: process.env.DB_HOST,
-  dialect: 'postgres',
-});
+const mongoose = require('mongoose');
 
-const Cart = sequelize.define('Cart', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
+const cartSchema = new mongoose.Schema({
   userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
+  products: [
+    {
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true
+      },
+      quantity: {
+        type: Number,
+        default: 1,
+        min: 1
+      }
+    }
+  ]
 }, {
-  timestamps: true, // Adds createdAt and updatedAt columns automatically
+  timestamps: true // Adds createdAt and updatedAt
 });
 
-const CartProduct = sequelize.define('CartProduct', {
-  cartId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Cart,
-      key: 'id',
-    },
-  },
-  productId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-}, {
-  timestamps: false,
-});
-
-// Create indexes
-CartProduct.addIndex('idx_cartProducts_cartId', ['cartId']);
-CartProduct.addIndex('idx_cartProducts_productId', ['productId']);
-
-(async () => {
-  await sequelize.sync({ force: true });
-  console.log('The tables for the Cart and CartProduct models were just (re)created!');
-})();
+module.exports = mongoose.model('Cart', cartSchema);
