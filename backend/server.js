@@ -1,15 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import paymentRoutes from './routes/paymentRoutes.js';
 import productRoutes from './routes/productRoutes.js';
-import mongoose from 'mongoose';
-import { createApp } from 'vue'
 
-const app = createApp({
-  /* root component options */
-})
-dotenv.config(); // Load environment variables
+dotenv.config(); // Load env variables
 
 const app = express();
 
@@ -23,13 +19,11 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-const paymentRoutes = require('./routes/payment');
 app.use('/api/payment', paymentRoutes);
 app.use('/products', productRoutes);
-app.use('/payment', paymentRoutes);
 
-// Start the server
-const PORT = 5000;
+// Start server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
