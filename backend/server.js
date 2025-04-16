@@ -14,6 +14,8 @@ dotenv.config(); // Load environment variables
 const app = express();
 
 // Middleware
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/payments', require('./routes/payments'));
 app.use(cors());
 app.use(express.json());
 app.use(helmet()); // Security enhancement
