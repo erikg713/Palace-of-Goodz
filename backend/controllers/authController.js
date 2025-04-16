@@ -40,6 +40,11 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 }
 
+export const registerUser = (req, res) => {
+  const { piUsername, walletAddress, password } = req.body;
+  // Implement registration logic here (e.g., save user to database)
+  res.status(201).json({ message: 'User registered successfully' });
+};
 // @desc    Login User
 export const loginUser = async (req: Request, res: Response) => {
   const errors = validationResult(req)
