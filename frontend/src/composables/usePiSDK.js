@@ -1,3 +1,26 @@
+import { onMounted } from 'vue';
+
+export function usePiSDK() {
+  const initPiSDK = () => {
+    return new Promise((resolve) => {
+      window.addEventListener('sdkReady', () => {
+        const sandboxMode = process.env.NODE_ENV === 'development';
+        Pi.init({ version: "2.0", sandbox: sandboxMode });
+        resolve();
+      });
+    });
+  };
+
+  onMounted(async () => {
+    await initPiSDK();
+  });
+
+  return {
+    initPiSDK
+  };
+}
+
+
 import { ref } from 'vue';
 
 const userWallet = ref(null);
