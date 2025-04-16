@@ -1,31 +1,3 @@
-// src/components/PaymentButton.vue
-<template>
-  <button @click="makePayment">Pay with Pi</button>
-</template>
-
-<script setup>
-import { usePiSDK } from '@/composables/usePiSDK';
-import { onMounted } from 'vue';
-
-const { initPiSDK } = usePiSDK();
-
-onMounted(async () => {
-    await initPiSDK();
-});
-
-const makePayment = async () => {
-  try {
-    const paymentResult = await Pi.createPayment({
-      amount: 10,
-      memo: 'Payment for product',
-      metadata: { productId: '123' }
-    });
-    console.log('Payment Result:', paymentResult);
-  } catch (error) {
-    console.error('Payment Error:', error);
-  }
-};
-</script>
 <template>
   <button
     class="custom-pi-button"
@@ -61,7 +33,13 @@ const initiatePayment = async () => {
     // Your Pi payment logic here
     console.log('Payment initiated!');
     // For demonstration purposes, simulate an API call
+    // const paymentResult = await Pi.createPayment({
+    //   amount: 10,
+    //   memo: 'Payment for product',
+    //   metadata: { productId: '123' }
+    // });
     await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
+    // console.log('Payment Result:', paymentResult);
   } catch (error) {
     console.error('Payment failed:', error);
     // Handle the error appropriately
