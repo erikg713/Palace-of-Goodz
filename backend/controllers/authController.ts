@@ -68,3 +68,25 @@ export const loginUser = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Server error' })
   }
 }
+// Handle Pi login requests
+export const loginUser = async (req, res) => {
+  const { uid, username } = req.body;
+
+  if (!uid || !username) {
+    return res.status(400).json({ error: 'Missing Pi credentials' });
+  }
+
+  // You can connect this to MongoDB or use a mock DB here
+  const role = ['pi_admin_uid_1', 'pi_admin_uid_2'].includes(uid) ? 'admin' : 'customer';
+
+  // Optional: Upsert user to DB
+  // await UserModel.findOneAndUpdate({ uid }, { username, role }, { upsert: true });
+
+  res.set({
+    'x-user-id': uid,
+    'x-user-username': username,
+    'x-user-role': role,
+  });
+
+  res.json({ message: 'Login successful', uid, username, role });
+};
