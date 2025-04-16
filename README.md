@@ -101,6 +101,10 @@ git clone https://github.com/erikg713/palace-of-goods.git
 cd palace-of-goods
 ```
 
+### Install Vue CLI-Plugin
+vue add pwa
+
+
 ### Backend Setup (Node.js + Express API)
 
 1. Install dependencies:
