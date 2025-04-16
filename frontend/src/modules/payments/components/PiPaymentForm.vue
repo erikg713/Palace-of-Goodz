@@ -1,3 +1,39 @@
+<template>
+  <div>
+    <button
+      @click="initiatePayment"
+      :disabled="isLoading"
+    >
+      <span v-if="!isLoading">Pay with Pi</span>
+      <span v-else>
+        <vue-loading-spinner />  <!-- Display the spinner -->
+        Processing...
+      </span>
+    </button>
+
+    <div v-if="isLoading">
+      <p>Initiating payment...</p>
+    </div>
+
+    <div v-if="paymentStatus === 'initiated'">
+      <p>Please confirm the payment in your Pi Network app.</p>
+    </div>
+
+    <div v-if="paymentStatus === 'verifying'">
+      <p>Verifying payment...</p>
+    </div>
+
+    <div v-if="paymentStatus === 'completed'">
+      <p>Payment successful!</p>
+    </div>
+
+    <div v-if="paymentStatus === 'failed' || paymentStatus === 'verification_failed'">
+      <p>Payment failed: {{ paymentError.message }}</p>
+    </div>
+  </div>
+</template>
+
+
 <!-- src/modules/payments/components/PiPaymentForm.vue -->
 <template>
   <div>
