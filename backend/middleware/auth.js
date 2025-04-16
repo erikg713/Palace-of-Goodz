@@ -1,34 +1,32 @@
 // middleware/auth.js
-export const authenticate = (req, res, next) => {
-  // Use minimal checking. For example, if using JWT, decode and verify it.
-  const token = req.headers['authorization'];
-  if (!token) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  // Here, replace with your real token verification logic (such as using jwt.verify)
-  next();
-};
 
+import { verifyUser } from '../utils/verifyUser.js';
 
-import { verifyUser } from '../utils/verifyUser.js'
-
-// Admin Pi usernames
-const ADMIN_USERNAMES = ['your_pi_username']
+// List of admin Pi usernames
+const ADMIN_USERNAMES = ['your_pi_username'];
 
 export const authenticate = async (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1]
-  if (!token) return res.status(401).json({ error: 'No token' })
-
-  const user = await verifyUser(token)
-  if (!user) return res.status(403).json({ error: 'Invalid user' })
-
-  // Inject admin role based on username
-  if (ADMIN_USERNAMES.includes(user.username)) {
-    user.roles = ['admin']
-  } else {
-    user.roles = ['user']
+  // Expecting the token in the Authorization header in the form "Bearer <token>"
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
   }
 
-  req.user = user
-  next()
-}
+  try {
+    // verifyUser should decode/validate the token and return the user object or null if invalid
+    const user = await verifyUser(token);
+    if (!user) {
+      return res.status(403).json({ error: 'Invalid user' });
+    }
+
+    // Inject role based on Pi username:
+    // If username is found in ADMIN_USERNAMES, assign 'admin' role; otherwise, assign 'user'.
+    user.roles = ADMIN_USERNAMES.includes(user.username) ? ['admin'] : ['user'];
+
+    req.user = user;
+    next();
+  } catch (err) {
+    console.error('Authentication error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
