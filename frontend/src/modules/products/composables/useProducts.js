@@ -33,3 +33,36 @@ export default function useProducts() {
       createProduct,
   };
 }
+import { ref } from 'vue';
+import { fetchProducts, deleteProduct as deleteProductApi } from '../services/productService';
+import { useToken } from '@/pi/token';
+
+export default function useProducts() {
+  const products = ref([]);
+  const { token } = useToken();
+
+  const loadProducts = async () => {
+    try {
+      const data = await fetchProducts();
+      products.value = data;
+      return data;
+    } catch (error) {
+      console.error("Failed to load products:", error);
+    }
+  };
+
+  const deleteProduct = async (id) => {
+    try {
+      await deleteProductApi(id, token.value);
+      products.value = products.value.filter(p => p._id !== id); // Optimistic update
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+    }
+  };
+
+  return {
+    products,
+    loadProducts,
+    deleteProduct
+  };
+}
