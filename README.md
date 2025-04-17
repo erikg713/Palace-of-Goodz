@@ -45,7 +45,7 @@ Palace of Goods is a decentralized marketplace that allows users to buy and sell
 
 - **Express.js** – Lightweight and scalable backend framework
 - **PostgreSQL** – Relational database for scalable data storage
-- **JWT (jsonwebtoken)** – Secure authentication system
+- **Pi Network Payment flow system
 - **Multer & Cloudinary** – Image uploads & cloud storage
 - **Docker** – Containerized development & production
 - **PM2** – Process management for production
