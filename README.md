@@ -120,34 +120,7 @@ vue add pwa
    npm run dev      # Start development server
    ```
 
-### Frontend Setup (React with TypeScript)
-
-1. Install dependencies:
-   ```bash
-   cd client
-   npm install react-router-dom axios@latest react-query
-   ```
-
-2. Start the frontend server:
-   ```bash
-   npm start
-   ```
-npm install sequelize pg pg-hstore
----
-
-## Environment Variables
-
-Create a `.env` file in the server directory and add the required environment variables.
-
----
-
-## Database Schema
-
-### Users Table
-
-### Products Table
-
----
+### Frontend Setup (vue3.js)
 
 ## API Endpoints
 
@@ -162,40 +135,12 @@ Create a `.env` file in the server directory and add the required environment va
 - `GET /api/products` – Fetch all products
 - `POST /api/products` – Add new product (Admin only)
 - `PUT /api/products/:id` – Edit product details (Admin only)
-- `DELETE /api/products/:id` – Remove product (Admin only)
-
-### Payments (Pi Network)
+- `DELETE /api/products/:id` – Remove pr
 
 - `POST /api/payment/create` – Initiate a Pi Network payment
 - `POST /api/payment/verify` – Confirm and validate Pi payment
 
 ---
-
-## Docker Setup
-
-### Build and Run the Server in Docker
-
-```bash
-docker build -t palace-of-goods-server .
-docker run -d -p 5000:5000 --env-file .env palace-of-goods-server
-```
-
-### Use Docker Compose for Backend & Database
-
-```bash
-# Add your Docker Compose instructions here
-```
-
-w the installation instructions for your operating system.
-        - Verify the installation by running:
-          ```bash
-          
-
-3. **Install necessary dependencies for the Next.js app:**
-    ```bash
-    npm install next-auth bcryptjs jsonwebtoken web3 @types/jsonwebtoken @types/bcryptjs @types/web3js
-    ```
-
 ### Installation
 
 #### Clone the Repository
