@@ -120,25 +120,6 @@ npm init vue@latest
    ```
 
 ### Frontend Setup (vue3.js)
-
-## API Endpoints
-
-### Authentication
-
-- `POST /api/users/signup` – Register new users
-- `POST /api/users/login` – Login and receive JWT
-- `GET /api/users/profile` – Get user details (Requires JWT)
-
-### Products
-
-- `GET /api/products` – Fetch all products
-- `POST /api/products` – Add new product (Admin only)
-- `PUT /api/products/:id` – Edit product details (Admin only)
-- `DELETE /api/products/:id` – Remove pr
-
-- `POST /api/payment/create` – Initiate a Pi Network payment
-- `POST /api/payment/verify` – Confirm and validate Pi payment
-
 ---
 ### Installation
 
