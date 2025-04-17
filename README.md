@@ -31,7 +31,6 @@ Palace of Goods is a decentralized marketplace that allows users to buy and sell
 
 - ✅ Buy & sell goods using Pi Network cryptocurrency
 - ✅ Secure transactions with blockchain integration
-- ✅ JWT-based user authentication for secure access
 - ✅ Node.js & Express.js backend with PostgreSQL database
 - ✅ Vue.js (TypeScript) frontend for an optimized UI/UX
 - ✅ Redux Toolkit (planned) for state management
@@ -103,7 +102,7 @@ cd palace-of-goods
 
 ### Install Vue CLI-Plugin
 vue add pwa
-
+npm init vue@latest
 
 ### Backend Setup (Node.js + Express API)
 
