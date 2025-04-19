@@ -110,4 +110,4 @@ function verifySignature(payload, signature) {
   hmac.update(JSON.stringify(payload))
   const digest = hmac.digest('hex')
   return digest === signature
-}
+  }
