@@ -40,3 +40,15 @@ export const deleteProduct = async (req, res) => {
     return res.status(500).json({ error: "Failed to delete product" });
   }
 };
+import Product from '../models/Product.js';
+
+export const getProducts = async (req, res) => {
+  const products = await Product.find();
+  res.json(products);
+};
+
+export const addProduct = async (req, res) => {
+  const { name, description, price, image, stock } = req.body;
+  const product = await Product.create({ name, description, price, image, stock });
+  res.json(product);
+};
