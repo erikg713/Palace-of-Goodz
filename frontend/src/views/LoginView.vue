@@ -25,3 +25,4 @@ methods: {
     }
   }
 }
+<button @click="piLogin">Login with Pi</button>
