@@ -2,7 +2,31 @@ import crypto from 'crypto'
 import axios from 'axios'
 import User from '../models/User.js' // Mongo model
 import axios from 'axios';
+import { verifyPiUserToken } from '../utils/piAuthUtils.js';
+import User from '../models/User.js';
 
+export const piLoginController = async (req, res) => {
+  const { user, accessToken } = req.body;
+
+  try {
+    const isValid = await verifyPiUserToken(user, accessToken);
+    if (!isValid) return res.status(401).json({ message: 'Invalid Pi token' });
+
+    let dbUser = await User.findOne({ uid: user.uid });
+    if (!dbUser) {
+      dbUser = await User.create({
+        uid: user.uid,
+        username: user.username,
+        roles: ['user'],
+      });
+    }
+
+    res.status(200).json({ success: true, user: dbUser });
+  } catch (err) {
+    console.error('[Pi Login Error]', err);
+    res.status(500).json({ message: 'Server error during Pi login' });
+  }
+};
 export const verifyPiUser = async (req, res) => {
   const { user, accessToken } = req.body;
 
