@@ -20,5 +20,12 @@ export const handlePiLogin = async (req, res) => {
     res.status(500).json({ error: 'Internal server error.' });
   }
 };
-
+export const getProfile = async (req, res) => {
+  const { user } = req;
+  res.json({
+    uid: user.uid,
+    username: user.username,
+    role: user.role,
+  });
+};
       
