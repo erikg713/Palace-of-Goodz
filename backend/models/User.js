@@ -1,9 +1,11 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, unique: true, required: true },
-  role: { type: String, default: 'user' },
+  uid: { type: String, required: true, unique: true },
+  username: { type: String, required: true },
+  roles: { type: [String], default: ['user'] },
   joined: { type: Date, default: Date.now },
-})
+});
 
-export default mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema);
+export default User;
