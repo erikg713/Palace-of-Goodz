@@ -1,7 +1,42 @@
 import crypto from 'crypto'
 import axios from 'axios'
 import User from '../models/User.js' // Mongo model
+import axios from 'axios';
 
+export const verifyPiUser = async (req, res) => {
+  const { user, accessToken } = req.body;
+
+  if (!user || !accessToken) {
+    return res.status(400).json({ error: 'Missing Pi user data.' });
+  }
+
+  try {
+    // Validate token with Pi servers
+    const response = await axios.get(`https://api.minepi.com/me`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    if (response.data.uid !== user.uid) {
+      return res.status(401).json({ error: 'Invalid user token.' });
+    }
+
+    // Check for admin
+    const role = process.env.ADMIN_PI_UID === user.uid ? 'admin' : 'user';
+
+    // You can save user to DB if needed here
+
+    res.status(200).json({
+      user: {
+        uid: user.uid,
+        username: user.username,
+        role,
+      }
+    });
+  } catch (error) {
+    console.error('Pi user verification failed:', error.message);
+    res.status(500).json({ error: 'Pi verification failed' });
+  }
+};
 export const verifyPiUser = async (req, res) => {
   const { user, payload, signature } = req.body
 
