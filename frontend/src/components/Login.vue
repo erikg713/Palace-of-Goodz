@@ -101,3 +101,22 @@ body {
   font-family: 'Inter', sans-serif;
 }
 </style>
+const scopes = ['payments'];
+
+function onIncompletePaymentFound(payment) {
+  console.warn('Incomplete Pi payment', payment);
+}
+
+Pi.authenticate(scopes, onIncompletePaymentFound)
+  .then(async (auth) => {
+    const res = await fetch('/api/auth/pi-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(auth),
+    });
+
+    const data = await res.json();
+    console.log('User verified:', data.user);
+    // Save user data locally
+  })
+  .catch(console.error);
