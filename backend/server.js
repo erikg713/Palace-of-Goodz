@@ -56,9 +56,9 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 5000 // Timeout after 5s instead of 30s
 })
-.then(() => console.log('✅ MongoDB connected successfully'))
+.then(() => console.log('MongoDB connected successfully'))
 .catch((err) => {
-  console.error('❌ MongoDB connection error:', err);
+  console.error('MongoDB connection error:', err);
   process.exit(1); // Exit on connection failure
 });
 
@@ -103,12 +103,12 @@ const PORT = process.env.PORT || 5000;
 const ENV = process.env.NODE_ENV || 'development';
 
 const server = app.listen(PORT, () => {
-  console.log(`🚀 Server running in ${ENV} mode at http://localhost:${PORT}`);
+  console.log(`Server running in ${ENV} mode at http://localhost:${PORT}`);
 });
 
 // Unhandled rejection handling
 process.on('unhandledRejection', (err) => {
-  console.error('UNHANDLED REJECTION! 💥 Shutting down...');
+  console.error('UNHANDLED REJECTION! Shutting down...');
   console.error(err);
   
   // Graceful shutdown
