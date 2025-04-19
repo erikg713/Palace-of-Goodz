@@ -1,44 +1,44 @@
-import axios from 'axios';
+import Payment from '../models/Payment.js';
 
-const PI_API_KEY = process.env.PI_API_KEY;
-
-export const approvePayment = async (req, res) => {
-  const { paymentId } = req.body;
+export const createPayment = async (req, res) => {
   try {
-    await axios.post(
-      'https://api.minepi.com/payments/approve',
-      { paymentId },
-      {
-        headers: {
-          Authorization: `Key ${PI_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-    return res.status(200).json({ success: true });
+    const { paymentId, uid, amount, memo, metadata } = req.body;
+
+    const newPayment = new Payment({ paymentId, uid, amount, memo, metadata, status: 'PENDING' });
+    await newPayment.save();
+
+    res.status(201).json({ success: true });
   } catch (err) {
-    console.error("Approval failed:", err.response?.data || err.message);
-    return res.status(500).json({ error: "Approval failed" });
+    console.error(err);
+    res.status(500).json({ message: 'Payment creation error' });
   }
 };
 
 export const completePayment = async (req, res) => {
-  const { paymentId, txid } = req.body;
   try {
-    await axios.post(
-      'https://api.minepi.com/payments/complete',
-      { paymentId, txid },
-      {
-        headers: {
-          Authorization: `Key ${PI_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-    // Optional: store transaction in the database here
-    return res.status(200).json({ success: true });
+    const { paymentId, txid } = req.body;
+
+    const payment = await Payment.findOne({ paymentId });
+    if (!payment) return res.status(404).json({ message: 'Payment not found' });
+
+    payment.txid = txid;
+    payment.status = 'COMPLETED';
+    await payment.save();
+
+    res.status(200).json({ success: true });
   } catch (err) {
-    console.error("Completion failed:", err.response?.data || err.message);
-    return res.status(500).json({ error: "Completion failed" });
+    console.error(err);
+    res.status(500).json({ message: 'Payment completion error' });
+  }
+};
+
+export const getPaymentStatus = async (req, res) => {
+  try {
+    const payment = await Payment.findOne({ paymentId: req.params.paymentId });
+    if (!payment) return res.status(404).json({ message: 'Not found' });
+    res.status(200).json(payment);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error retrieving payment status' });
   }
 };
