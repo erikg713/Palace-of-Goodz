@@ -1,18 +1,15 @@
-import axios from 'axios';
+// utils/piVerification.js
+import fetch from 'node-fetch';
 
-export const verifyUser = async (accessToken) => {
-  if (!accessToken) {
-    console.error('Access token is required for verification.');
-    return null;
-  }
-
+export async function verifyPiAuth(user, accessToken) {
   try {
-    const { data } = await axios.get('https://api.minepi.com/me', {
+    const response = await fetch('https://api.minepi.com/me', {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
-    return data;
-  } catch (error) {
-    console.error('Failed to verify user:', error.response?.data || error.message);
-    return null;
+    const data = await response.json();
+    return data.uid === user.uid; // Must match exactly
+  } catch (err) {
+    console.error('Pi verification failed:', err);
+    return false;
   }
-};
+}
