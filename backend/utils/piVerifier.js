@@ -1,3 +1,24 @@
+import axios from 'axios';
+
+export const verifyPiToken = async (token) => {
+  try {
+    const response = await axios.post(
+      'https://api.minepi.com/v2/me',
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (err) {
+    console.error('Pi token verification failed:', err.response?.data || err.message);
+    return null;
+  }
+};
+
+
 // utils/piVerification.js
 import fetch from 'node-fetch';
 
