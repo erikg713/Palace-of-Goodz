@@ -1,3 +1,11 @@
+import PiLogin from '@/views/PiLogin.vue'
+import Dashboard from '@/views/Dashboard.vue'
+
+const routes = [
+  { path: '/', component: PiLogin },
+  { path: '/dashboard', component: Dashboard }, // Requires auth
+]
+
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
 const express = require('express');
