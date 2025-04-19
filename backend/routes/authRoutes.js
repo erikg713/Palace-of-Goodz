@@ -1,9 +1,9 @@
-import express from 'express';
+import { Router } from 'express';
 import { piLoginController } from '../controllers/piAuthController.js';
 
-const router = express.Router();
+const router = Router();
 
-// POST /api/auth/pi-login
+// Pi Network login route
 router.post('/pi-login', piLoginController);
 
 export default router;
