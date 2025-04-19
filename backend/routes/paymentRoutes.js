@@ -1,4 +1,11 @@
-import express from 'express';
+const express = require('express');
+const router = express.Router();
+const verifyPiToken = require('../middlewares/piAuth');
+
+router.get('/profile', verifyPiToken, async (req, res) => {
+  const user = req.piUser;
+  res.json({ message: `Welcome, ${user.username}` });
+});import express from 'express';
 import axios from 'axios';
 import { authenticate } from '../middleware/auth.js';
 
