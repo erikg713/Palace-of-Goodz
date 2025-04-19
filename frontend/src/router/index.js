@@ -1,6 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
+const express = require('express');
+const router = express.Router();
+const verifyPiToken = require('../middlewares/piAuth');
 
+router.get('/profile', verifyPiToken, async (req, res) => {
+  const user = req.piUser;
+  res.json({ message: `Welcome, ${user.username}` });
+});
 const routes = [
   { path: '/', name: 'Home', component: Home },
 ]
