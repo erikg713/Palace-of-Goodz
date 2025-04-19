@@ -42,3 +42,59 @@ export const getPaymentStatus = async (req, res) => {
     res.status(500).json({ message: 'Error retrieving payment status' });
   }
 };
+import Payment from '../models/Payment.js';
+import axios from 'axios';
+
+export const verifyPayment = async (req, res) => {
+  try {
+    const { paymentId } = req.body;
+
+    const response = await axios.get(`https://api.minepi.com/v2/payments/${paymentId}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.PI_API_KEY}`
+      }
+    });
+
+    const paymentData = response.data;
+    const { transaction } = paymentData;
+
+    if (transaction && transaction.txid) {
+      await Payment.findOneAndUpdate(
+        { paymentId },
+        {
+          status: 'completed',
+          txId: transaction.txid,
+        },
+        { new: true }
+      );
+      return res.json({ message: 'Payment verified & completed.' });
+    } else {
+      return res.status(400).json({ message: 'Payment not yet completed.' });
+    }
+  } catch (err) {
+    console.error('verifyPayment error:', err);
+    res.status(500).json({ message: 'Payment verification failed.' });
+  }
+};
+
+export const recordNewPayment = async (req, res) => {
+  try {
+    const { paymentId, amount, memo } = req.body;
+    const existing = await Payment.findOne({ paymentId });
+    if (existing) return res.status(400).json({ message: 'Duplicate payment' });
+
+    const payment = await Payment.create({
+      paymentId,
+      uid: req.user.uid,
+      username: req.user.username,
+      amount,
+      memo,
+      status: 'pending',
+    });
+
+    res.json({ message: 'Payment recorded', payment });
+  } catch (err) {
+    console.error('recordNewPayment error:', err);
+    res.status(500).json({ message: 'Error recording payment' });
+  }
+};
