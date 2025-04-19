@@ -16,5 +16,15 @@ const verifyPiToken = async (req, res, next) => {
     return res.status(403).json({ message: 'Invalid Pi token' });
   }
 };
+const PiUser = require('../models/PiUser');
+
+...
+
+const { uid, username } = response.data;
+let user = await PiUser.findOne({ uid });
+if (!user) {
+  user = await PiUser.create({ uid, username, roles: ['user'] });
+}
+req.piUser = user;
 
 module.exports = verifyPiToken;
