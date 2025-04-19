@@ -1,15 +1,7 @@
-import { Router } from 'express';
-import {
-  piLoginController,
-  verifyPiUserController,
-} from '../controllers/piAuthController.js';
+// routes/authRoutes.js
+import express from 'express';
+import { handlePiLogin } from '../controllers/authController.js';
 
-const router = Router();
-
-// POST /api/auth/pi-login
-router.post('/pi-login', piLoginController);
-
-// POST /api/auth/verify
-router.post('/verify', verifyPiUserController);
-
+const router = express.Router();
+router.post('/pi-login', handlePiLogin);
 export default router;
