@@ -13,3 +13,12 @@ export const piLogin = async () => {
 function onIncompletePaymentFound(payment) {
   console.log('Handle incomplete payment:', payment);
 }
+const auth = await Pi.authenticate(['payments'], onIncompletePaymentFound);
+const token = auth.accessToken;
+
+await fetch('/api/profile', {
+  method: 'GET',
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+});
