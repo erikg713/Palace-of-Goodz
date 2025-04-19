@@ -1,8 +1,7 @@
-import express from 'express'
-import { verifyPiUser } from '../controllers/piAuthController.js'
+import express from 'express';
+import { verifyPiUser } from '../controllers/authController.js';
+const router = express.Router();
 
-const router = express.Router()
+router.post('/pi-login', verifyPiUser);
 
-router.post('/pi-login', verifyPiUser)
-
-export default router
+export default router;
