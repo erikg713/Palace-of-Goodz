@@ -8,7 +8,18 @@ import compression from 'compression'; // Added for performance
 import morgan from 'morgan'; // Added for logging
 import { fileURLToPath } from 'url'; // Added for ES modules compatibility
 import path from 'path';
+import app from './app.js';
+import dotenv from 'dotenv';
+import connectDB from './config/db.js';
 
+dotenv.config();
+const PORT = process.env.PORT || 5000;
+
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+});
 // Route imports - converted to consistent ES module syntax
 import authRoutes from './routes/authRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
