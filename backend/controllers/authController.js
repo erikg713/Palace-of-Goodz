@@ -1,78 +1,36 @@
-import crypto from 'crypto'
-import axios from 'axios'
-import User from '../models/User.js' // Mongo model
+import crypto from 'crypto';
 import axios from 'axios';
-import { verifyPiUserToken } from '../utils/piAuthUtils.js';
 import User from '../models/User.js';
 
+/**
+ * Verify the HMAC-SHA256 signature of the Pi payload
+ */
+function verifySignature(payload, signature) {
+  const hmac = crypto.createHmac('sha256', process.env.PI_SECRET_KEY);
+  hmac.update(JSON.stringify(payload));
+  const digest = hmac.digest('hex');
+  return digest === signature;
+}
+
+/**
+ * Main login handler for Pi users
+ */
 export const piLoginController = async (req, res) => {
-  const { user, accessToken } = req.body;
+  const { user, payload, signature } = req.body;
 
-  try {
-    const isValid = await verifyPiUserToken(user, accessToken);
-    if (!isValid) return res.status(401).json({ message: 'Invalid Pi token' });
-
-    let dbUser = await User.findOne({ uid: user.uid });
-    if (!dbUser) {
-      dbUser = await User.create({
-        uid: user.uid,
-        username: user.username,
-        roles: ['user'],
-      });
-    }
-
-    res.status(200).json({ success: true, user: dbUser });
-  } catch (err) {
-    console.error('[Pi Login Error]', err);
-    res.status(500).json({ message: 'Server error during Pi login' });
-  }
-};
-export const verifyPiUser = async (req, res) => {
-  const { user, accessToken } = req.body;
-
-  if (!user || !accessToken) {
-    return res.status(400).json({ error: 'Missing Pi user data.' });
+  if (!user || !payload || !signature) {
+    return res.status(400).json({ success: false, message: 'Missing Pi auth data' });
   }
 
   try {
-    // Validate token with Pi servers
-    const response = await axios.get(`https://api.minepi.com/me`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-
-    if (response.data.uid !== user.uid) {
-      return res.status(401).json({ error: 'Invalid user token.' });
+    // Step 1: Verify signature
+    const isValidSignature = verifySignature(payload, signature);
+    if (!isValidSignature) {
+      return res.status(403).json({ success: false, message: 'Invalid signature' });
     }
 
-    // Check for admin
-    const role = process.env.ADMIN_PI_UID === user.uid ? 'admin' : 'user';
-
-    // You can save user to DB if needed here
-
-    res.status(200).json({
-      user: {
-        uid: user.uid,
-        username: user.username,
-        role,
-      }
-    });
-  } catch (error) {
-    console.error('Pi user verification failed:', error.message);
-    res.status(500).json({ error: 'Pi verification failed' });
-  }
-};
-export const verifyPiUser = async (req, res) => {
-  const { user, payload, signature } = req.body
-
-  try {
-    // Step 1: Verify the signature from Pi Server
-    const isValid = verifySignature(payload, signature)
-    if (!isValid) {
-      return res.status(403).json({ success: false, message: 'Invalid signature' })
-    }
-
-    // Step 2: Confirm identity against Pi Platform API (optional double-check)
-    const piRes = await axios.post(
+    // Step 2 (optional): Verify against Pi API
+    const piResponse = await axios.post(
       'https://api.minepi.com/v2/me',
       {},
       {
@@ -80,34 +38,26 @@ export const verifyPiUser = async (req, res) => {
           Authorization: `Bearer ${payload.accessToken}`,
         },
       }
-    )
+    );
 
-    if (piRes.data.username !== user.username) {
-      return res.status(401).json({ success: false, message: 'Username mismatch' })
+    if (piResponse.data.username !== user.username) {
+      return res.status(401).json({ success: false, message: 'Pi user mismatch' });
     }
 
-    // Step 3: Find or create user
-    let existing = await User.findOne({ username: user.username })
-
-    if (!existing) {
-      existing = new User({
+    // Step 3: Find or create user in DB
+    let dbUser = await User.findOne({ uid: user.uid });
+    if (!dbUser) {
+      dbUser = await User.create({
+        uid: user.uid,
         username: user.username,
-        role: 'user',
+        roles: [process.env.ADMIN_PI_UID === user.uid ? 'admin' : 'user'],
         joined: new Date(),
-      })
-      await existing.save()
+      });
     }
 
-    return res.json({ success: true, user: existing })
+    return res.status(200).json({ success: true, user: dbUser });
   } catch (err) {
-    console.error('Auth error:', err)
-    return res.status(500).json({ success: false, message: 'Auth failed' })
+    console.error('[Pi Login Error]', err);
+    return res.status(500).json({ success: false, message: 'Server error during Pi login' });
   }
-}
-
-function verifySignature(payload, signature) {
-  const hmac = crypto.createHmac('sha256', process.env.PI_SECRET_KEY)
-  hmac.update(JSON.stringify(payload))
-  const digest = hmac.digest('hex')
-  return digest === signature
-  }
+};
