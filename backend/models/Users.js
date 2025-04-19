@@ -1,3 +1,13 @@
+import mongoose from 'mongoose';
+
+const userSchema = new mongoose.Schema({
+  uid: { type: String, required: true, unique: true },
+  username: { type: String, required: true },
+  roles: { type: [String], default: ['user'] },
+}, { timestamps: true });
+
+export default mongoose.model('User', userSchema);
+
 const { Model, DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt'); // For password hashing
 const sequelize = require('../sequelize-instance'); // Sequelize instance
