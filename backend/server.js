@@ -14,7 +14,26 @@ import connectDB from './config/db.js';
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
+const ENV = process.env.NODE_ENV || 'development';
 
+connectDB().then(() => {
+  const server = app.listen(PORT, () => {
+    console.log(`Server running in ${ENV} mode at http://localhost:${PORT}`);
+  });
+
+  process.on('unhandledRejection', (err) => {
+    console.error('UNHANDLED REJECTION! Shutting down...');
+    console.error(err);
+    server.close(() => process.exit(1));
+  });
+
+  process.on('SIGINT', () => {
+    mongoose.connection.close(() => {
+      console.log('MongoDB connection closed due to app termination');
+      process.exit(0);
+    });
+  });
+});
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
