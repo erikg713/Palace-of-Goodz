@@ -1,11 +1,10 @@
+// models/User.js
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  uid: { type: String, required: true, unique: true },
+  uid: { type: String, required: true, unique: true }, // from Pi user.uid
   username: { type: String, required: true },
-  roles: { type: [String], default: ['user'] },
-  joined: { type: Date, default: Date.now },
-});
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
+}, { timestamps: true });
 
-const User = mongoose.model('User', userSchema);
-export default User;
+export default mongoose.model('User', userSchema);
