@@ -1,49 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const paymentSchema = new mongoose.Schema({
-  paymentId: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true
-  },
-  txid: {
-    type: String,
-    default: null
-  },
-  amount: {
-    type: Number,
-    required: true
-  },
-  status: {
-    type: String,
-    enum: ['initiated', 'approved', 'completed', 'failed'],
-    default: 'initiated'
-  },
-  memo: {
-    type: String
-  },
-  metadata: {
-    type: Object, // includes user info, product ID, etc.
-    default: {}
-  },
-  error: {
-    type: String,
-    default: null
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+  paymentId: { type: String, required: true, unique: true },
+  uid: { type: String, required: true },
+  amount: { type: Number, required: true },
+  memo: { type: String },
+  metadata: { type: Object },
+  status: { type: String, enum: ['PENDING', 'COMPLETED', 'CANCELLED'], default: 'PENDING' },
+  txid: { type: String },
+}, { timestamps: true });
 
-paymentSchema.pre('save', function (next) {
-  this.updatedAt = new Date();
-  next();
-});
-
-module.exports = mongoose.model('Payment', paymentSchema);
+export default mongoose.model('Payment', paymentSchema);
