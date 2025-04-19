@@ -2,7 +2,6 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../../models/User'); // Update path to your User model
-const jwt = require('jsonwebtoken');
 
 router.post('/pi-login', async (req, res) => {
   const { user, accessToken } = req.body;
@@ -22,3 +21,11 @@ router.post('/pi-login', async (req, res) => {
 });
 
 module.exports = router;
+const express = require('express');
+const router = express.Router();
+const verifyPiToken = require('../middlewares/piAuth');
+
+router.get('/profile', verifyPiToken, async (req, res) => {
+  const user = req.piUser;
+  res.json({ message: `Welcome, ${user.username}` });
+});
