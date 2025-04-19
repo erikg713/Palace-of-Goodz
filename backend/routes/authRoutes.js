@@ -1,5 +1,5 @@
 import express from 'express';
-import { piLoginController } from '../controllers/authController.js';
+import { piLoginController } from '../controllers/piAuthController.js';
 
 const router = express.Router();
 
