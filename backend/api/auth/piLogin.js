@@ -21,3 +21,12 @@ router.post('/login', async (req, res) => {
 });
 
 export default router;
+import express from 'express';
+import { verifyPiAuthToken } from '../controllers/authController.js';
+
+const router = express.Router();
+
+// POST /api/auth/pi-login
+router.post('/pi-login', verifyPiAuthToken);
+
+export default router;
