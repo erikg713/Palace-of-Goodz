@@ -1,121 +1,61 @@
-import { Request, Response } from 'express';
-import Cart from '../models/Cart';
-import { check, validationResult } from 'express-validator';
+import { Request, Response, NextFunction } from 'express'; import mongoose from 'mongoose'; import { body, validationResult } from 'express-validator'; import Cart, { ICart } from '../models/Cart'; import logger from '../utils/logger';
 
-// Helper function to find cart by user ID
-const findCartByUserId = async (userId: string) => {
-    return await Cart.findOne({ user: userId }).populate('items.product');
-};
+// --- Validation Middleware --- export const validateCartAction = (action: 'get' | 'add' | 'remove' | 'clear') => { switch (action) { case 'get': return [ body('userId').notEmpty().withMessage('User ID is required.'), ]; case 'add': return [ body('userId').notEmpty().withMessage('User ID is required.'), body('productId').notEmpty().withMessage('Product ID is required.'), body('quantity').isInt({ gt: 0 }).withMessage('Quantity must be > 0'), ]; case 'remove': return [ body('userId').notEmpty().withMessage('User ID is required.'), body('productId').notEmpty().withMessage('Product ID is required.'), ]; case 'clear': return [ body('userId').notEmpty().withMessage('User ID is required.'), ]; } };
 
-// Retrieve the user's cart
-export const getCart = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { userId } = req.params;
-        if (!userId) {
-            res.status(400).json({ error: 'User ID is required.' });
-            return;
-        }
+// --- Service Layer --- class CartService { static async findCartOrCreate(userId: string, session?: mongoose.ClientSession): Promise<ICart> { let cart = await Cart.findOne({ user: userId }).session(session || null).populate('items.product'); if (!cart) { cart = new Cart({ user: userId, items: [] }); } return cart; }
 
-        const cart = await findCartByUserId(userId);
-        if (!cart) {
-            res.status(404).json({ error: 'Cart not found.' });
-            return;
-        }
+static async getCart(userId: string): Promise<ICart> { return this.findCartOrCreate(userId); }
 
-        res.status(200).json(cart);
-    } catch (err: any) {
-        res.status(500).json({ error: 'Failed to retrieve cart.', details: err.message });
-    }
-};
+static async addItem(userId: string, productId: string, qty: number): Promise<ICart> { const session = await mongoose.startSession(); try { await session.withTransaction(async () => { const cart = await this.findCartOrCreate(userId, session); const idx = cart.items.findIndex(i => i.product.toString() === productId); if (idx > -1) { cart.items[idx].quantity += qty; } else { cart.items.push({ product: productId, quantity: qty }); } await cart.save({ session }); }); return await this.getCart(userId); } finally { session.endSession(); } }
 
-// Add an item to the cart
-export const addToCart = [
-    check('userId').notEmpty().withMessage('User ID is required.'),
-    check('productId').notEmpty().withMessage('Product ID is required.'),
-    check('quantity').isInt({ gt: 0 }).withMessage('Quantity must be a positive integer.'),
-    async (req: Request, res: Response): Promise<void> => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            res.status(400).json({ errors: errors.array() });
-            return;
-        }
+static async removeItem(userId: string, productId: string): Promise<ICart> { const session = await mongoose.startSession(); try { await session.withTransaction(async () => { const cart = await this.findCartOrCreate(userId, session); cart.items = cart.items.filter(i => i.product.toString() !== productId); await cart.save({ session }); }); return await this.getCart(userId); } finally { session.endSession(); } }
 
-        try {
-            const { userId, productId, quantity } = req.body;
+static async clearCart(userId: string): Promise<ICart> { const session = await mongoose.startSession(); try { await session.withTransaction(async () => { const cart = await this.findCartOrCreate(userId, session); cart.items = []; await cart.save({ session }); }); return await this.getCart(userId); } finally { session.endSession(); } } }
 
-            let cart = await findCartByUserId(userId);
-            if (!cart) {
-                cart = new Cart({ user: userId, items: [] });
-            }
+// --- Controller Layer --- export const CartController = { getCart: async (req: Request, res: Response, next: NextFunction) => { try { const { userId } = req.params; const errors = validationResult(req); if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-            const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
-            if (itemIndex > -1) {
-                cart.items[itemIndex].quantity += quantity;
-            } else {
-                cart.items.push({ product: productId, quantity });
-            }
+const cart = await CartService.getCart(userId);
+  res.json(cart);
+} catch (err: any) {
+  logger.error('getCart failed', { error: err });
+  next(err);
+}
 
-            await cart.save();
-            res.status(200).json({ message: 'Item added to cart.', cart });
-        } catch (err: any) {
-            res.status(500).json({ error: 'Failed to add item to cart.', details: err.message });
-        }
-    }
-];
+},
 
-// Remove an item from the cart
-export const removeFromCart = [
-    check('userId').notEmpty().withMessage('User ID is required.'),
-    check('productId').notEmpty().withMessage('Product ID is required.'),
-    async (req: Request, res: Response): Promise<void> => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            res.status(400).json({ errors: errors.array() });
-            return;
-        }
+addToCart: async (req: Request, res: Response, next: NextFunction) => { try { const errors = validationResult(req); if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-        try {
-            const { userId, productId } = req.body;
+const { userId, productId, quantity } = req.body;
+  const cart = await CartService.addItem(userId, productId, quantity);
+  res.json({ message: 'Item added', cart });
+} catch (err: any) {
+  logger.error('addToCart failed', { error: err });
+  next(err);
+}
 
-            const cart = await findCartByUserId(userId);
-            if (!cart) {
-                res.status(404).json({ error: 'Cart not found.' });
-                return;
-            }
+},
 
-            cart.items = cart.items.filter(item => item.product.toString() !== productId);
-            await cart.save();
-            res.status(200).json({ message: 'Item removed from cart.', cart });
-        } catch (err: any) {
-            res.status(500).json({ error: 'Failed to remove item from cart.', details: err.message });
-        }
-    }
-];
+removeFromCart: async (req: Request, res: Response, next: NextFunction) => { try { const errors = validationResult(req); if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-// Clear all items from the cart
-export const clearCart = [
-    check('userId').notEmpty().withMessage('User ID is required.'),
-    async (req: Request, res: Response): Promise<void> => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            res.status(400).json({ errors: errors.array() });
-            return;
-        }
+const { userId, productId } = req.body;
+  const cart = await CartService.removeItem(userId, productId);
+  res.json({ message: 'Item removed', cart });
+} catch (err: any) {
+  logger.error('removeFromCart failed', { error: err });
+  next(err);
+}
 
-        try {
-            const { userId } = req.body;
+},
 
-            const cart = await findCartByUserId(userId);
-            if (!cart) {
-                res.status(404).json({ error: 'Cart not found.' });
-                return;
-            }
+clearCart: async (req: Request, res: Response, next: NextFunction) => { try { const errors = validationResult(req); if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-            cart.items = [];
-            await cart.save();
-            res.status(200).json({ message: 'Cart cleared.', cart });
-        } catch (err: any) {
-            res.status(500).json({ error: 'Failed to clear cart.', details: err.message });
-        }
-    }
-];
+const { userId } = req.body;
+  const cart = await CartService.clearCart(userId);
+  res.json({ message: 'Cart cleared', cart });
+} catch (err: any) {
+  logger.error('clearCart failed', { error: err });
+  next(err);
+}
+
+} };
+
