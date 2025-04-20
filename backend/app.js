@@ -6,7 +6,29 @@ import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
+// backend/app.js
+import express from "express";
+import cors from "cors";
+import { env } from "./config/dotenv"; // Loads environment variables
+import productRoutes from "./routes/productRoutes";
+import userRoutes from "./routes/userRoutes";
+import orderRoutes from "./routes/orderRoutes";
+import paymentRoutes from "./routes/paymentRoutes";
+import { errorHandler } from "./utils/errorHandler";
 
+const app = express();
+
+app.use(cors({ origin: env.CLIENT_URL || "*" }));
+app.use(express.json());
+
+app.use("/api/products", productRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/payments", paymentRoutes);
+
+app.use(errorHandler);
+
+export default app;
 const app = express();
 
 app.use(cors());
