@@ -1,3 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- … -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script>
+    // Initialize Pi SDK for all pages
+    Pi.init({ version: "2.0", sandbox: true });
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <!-- Your Vue bundle will mount into #app -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
+
 <script>
 export default {
   mounted() {
