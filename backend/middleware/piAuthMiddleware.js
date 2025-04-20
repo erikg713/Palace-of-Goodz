@@ -1,6 +1,29 @@
 import { verifyPiToken } from '../utils/piVerifier.js';
 import User from '../models/User.js';
+import PiAuthService from '../services/piAuthService'; // Your server-side Pi SDK logic
+import { Request, Response, NextFunction } from 'express';
+import logger from '../utils/logger';
 
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const accessToken = req.header('Authorization')?.replace('Bearer ', '');
+
+  if (!accessToken) {
+    return res.status(401).json({ error: 'Access denied. No Pi Network access token provided.' });
+  }
+
+  try {
+    const piUser = await PiAuthService.verifyAccessToken(accessToken);
+    if (!piUser) {
+      return res.status(401).json({ error: 'Invalid Pi Network access token.' });
+    }
+
+    req.user = piUser; // Attach the verified Pi user info
+    next();
+  } catch (error) {
+    logger.error('Pi Network auth failed', { error });
+    res.status(401).json({ error: 'Pi Network authentication failed.' });
+  }
+};
 export const piAuthMiddleware = async (req, res, next) => {
   try {
     const token = req.headers['x-pi-auth'];
