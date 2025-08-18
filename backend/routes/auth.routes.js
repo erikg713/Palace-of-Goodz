@@ -1,9 +1,7 @@
-import express from 'express';
-import { getProfile } from '../controllers/authController.js';
-import { piAuthMiddleware } from '../middleware/piAuthMiddleware.js';
+import { Router } from "express";
+import { login } from "../controllers/auth.controller.js";
 
-const router = express.Router();
-
-router.get('/me', piAuthMiddleware, getProfile);
+const router = Router();
+router.post("/login", login);
 
 export default router;
