@@ -90,7 +90,46 @@ backend/
 ├── server.js
 ├── .env
 ├── package.json
-
+```
+palace-of-goods/
+├── backend/                  # Node.js + Express API
+│   ├── src/
+│   │   ├── index.js          # Entry point
+│   │   ├── routes/
+│   │   │   ├── auth.js       # Pi Authentication API
+│   │   │   ├── payments.js   # Pi Payment API
+│   │   │   └── products.js   # Products API
+│   │   ├── db.js             # Database connection
+│   │   └── models/
+│   │       ├── Product.js
+│   │       └── Order.js
+│   ├── package.json
+│   └── .env
+│
+├── frontend/                 # React + Tailwind
+│   ├── src/
+│   │   ├── App.js            # Main app entry
+│   │   ├── components/
+│   │   │   ├── Navbar.js
+│   │   │   ├── ProductCard.js
+│   │   │   ├── Cart.js
+│   │   │   └── Checkout.js
+│   │   ├── pages/
+│   │   │   ├── Home.js
+│   │   │   ├── Products.js
+│   │   │   └── Profile.js
+│   │   ├── hooks/
+│   │   │   ├── usePiAuth.js      # Custom hook for Pi login
+│   │   │   └── usePiPayments.js  # Custom hook for payments
+│   ├── public/
+│   │   └── index.html
+│   ├── package.json
+│   └── tailwind.config.js
+│
+├── docker-compose.yml        # Optional for DB + services
+├── README.md
+└── .gitignore
+```
 ## Installation
 
 ### Clone the Repository
