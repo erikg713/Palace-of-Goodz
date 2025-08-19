@@ -1,40 +1,23 @@
-<!-- src/modules/products/components/ProductCard.vue -->
-<template>
-  <div class="product-card">
-    <h3>{{ product.name }}</h3>
-    <p>{{ product.description }}</p>
-  </div>
-</template>
+import { useCart } from "../context/CartContext";
 
-<script setup>
-  import { defineProps } from 'vue';
+export default function ProductCard({ product }) {
+  const { addToCart } = useCart();
 
-  defineProps({
-    product: {
-      type: Object,
-      required: true
-    }
-  });
-</script>
-
-
-<template>
-  <div class="product-card">
-    <img :src="product.imageUrl" :alt="`Image of ${product.name}`" />
-    <h3>{{ product.name }}</h3>
-    <p>{{ product.description }}</p>
-    <p>{{ product.price }} π</p>
-    <button
-      @click="handlePurchase"
-      :disabled="isProcessing"
-      :aria-busy="isProcessing"
-      :aria-label="`Buy ${product.name} with Pi`"
-    >
-      {{ isProcessing ? 'Processing...' : 'Buy with Pi' }}
-    </button>
-  </div>
-</template>
-
+  return (
+    <div className="border rounded-xl shadow p-4 flex flex-col">
+      <img src={product.image_url} alt={product.name} className="h-40 object-cover rounded" />
+      <h3 className="mt-2 text-lg font-semibold">{product.name}</h3>
+      <p className="text-gray-500">{product.description}</p>
+      <p className="mt-2 font-bold">{product.price_in_pi} ⧫ Pi</p>
+      <button
+        className="mt-auto bg-purple-600 text-white px-3 py-1 rounded-lg hover:bg-purple-700"
+        onClick={() => addToCart(product)}
+      >
+        Add to Cart
+      </button>
+    </div>
+  );
+}
 <script>
 import { ref } from 'vue';
 import { initiatePayment } from '@/services/paymentApi';
