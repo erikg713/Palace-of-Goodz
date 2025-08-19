@@ -8,8 +8,6 @@ const router = Router();
 router.get("/", listProducts);
 router.post("/", createProduct); // Could protect with admin middleware later
 
-export default router;
-
 const router = express.Router();
 
 router.get('/', getAllProducts);
