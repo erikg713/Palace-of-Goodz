@@ -1,16 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
-  uid: { type: String, required: true },
-  items: [
-    {
-      productId: mongoose.Schema.Types.ObjectId,
-      quantity: Number,
-    }
-  ],
-  total: Number,
-  paymentId: String,
-  createdAt: { type: Date, default: Date.now }
-});
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  items: [{
+    product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+    quantity: { type: Number, default: 1 }
+  }],
+  total_pi: { type: Number, required: true },
+  paymentId: { type: String, required: true },
+  status: { type: String, enum: ["pending", "completed", "failed"], default: "pending" }
+}, { timestamps: true });
 
-export default mongoose.model('Order', orderSchema);
+export default mongoose.model("Order", orderSchema);
