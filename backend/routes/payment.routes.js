@@ -3,6 +3,14 @@ import { recordNewPayment, verifyPayment } from '../controllers/paymentControlle
 import { piAuthMiddleware } from '../middleware/piAuthMiddleware.js';
 import { Router } from "express";
 import { startPayment, confirmPayment } from "../controllers/payment.controller.js";
+import { Router } from "express";
+import { startPayment, confirmPayment } from "../controllers/payment.controller.js";
+
+const router = Router();
+router.post("/create", startPayment);
+router.post("/verify", confirmPayment);
+
+export default router;
 
 const router = Router();
 router.post("/create", startPayment);
