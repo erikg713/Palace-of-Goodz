@@ -30,11 +30,6 @@ app.use("/api/cart", cartRoutes); // mount cart routes
 app.use(errorHandler);
 
 export default app;
-app.use("/api/products", productRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/payments", paymentRoutes);
-
 app.use(errorHandler);
 
 export default app;
