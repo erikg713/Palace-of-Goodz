@@ -1,1 +1,437 @@
+# File: backend/package.json
+{
+  "name": "palace-of-goodz-backend",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p .",
+    "start": "node dist/server.js",
+    "prisma": "prisma",
+    "db:migrate": "prisma migrate deploy",
+    "db:generate": "prisma generate",
+    "db:seed": "tsx prisma/seed.ts",
+    "lint": "eslint . --ext .ts"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "pino": "^9.3.2",
+    "pino-http": "^9.0.0",
+    "zod": "^3.23.8",
+    "@prisma/client": "^5.18.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.12",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "prettier": "^3.3.3",
+    "prisma": "^5.18.0",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  }
+}
+
+# File: backend/tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src", "prisma/seed.ts"]
+}
+
+# File: backend/.env.example
+# Copy to .env and fill values
+PI_API_KEY=your_pi_api_key
+PI_NETWORK=Pi Testnet
+DATABASE_URL=postgresql://postgres:postgres@db:5432/palace
+PORT=8080
+CORS_ORIGIN=http://localhost:5173
+
+# File: backend/prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String  @id @default(uuid())
+  uid       String  @unique   // Pi user uid
+  username  String?
+  wallet    String?
+  createdAt DateTime @default(now())
+  orders    Order[]
+  products  Product[] @relation("UserProducts")
+}
+
+model Product {
+  id        String  @id @default(uuid())
+  name      String
+  pricePi   Float
+  imageUrl  String?
+  ownerId   String
+  owner     User    @relation("UserProducts", fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id         String  @id @default(uuid())
+  buyerId    String
+  productId  String
+  status     String  @default("pending")
+  paymentId  String?
+  txid       String?
+  createdAt  DateTime @default(now())
+  buyer      User    @relation(fields: [buyerId], references: [id])
+  product    Product @relation(fields: [productId], references: [id])
+}
+
+# File: backend/src/types.d.ts
+export type PiPaymentArgs = {
+  amount: number;
+  memo: string;
+  metadata: Record<string, unknown>;
+  uid: string;
+};
+
+export type AuthedRequest = import('express').Request & {
+  piUser?: { uid: string; username?: string };
+};
+
+# File: backend/src/config.ts
+import 'dotenv/config';
+
+export const config = {
+  port: Number(process.env.PORT || 8080),
+  dbUrl: process.env.DATABASE_URL!,
+  corsOrigin: process.env.CORS_ORIGIN || '*',
+  pi: {
+    apiKey: process.env.PI_API_KEY || '',
+    network: process.env.PI_NETWORK || 'Pi Testnet',
+    baseUrl: 'https://api.minepi.com/v2'
+  }
+};
+
+# File: backend/src/logger.ts
+import pino from 'pino';
+export const logger = pino({ level: 'info', transport: { target: 'pino-pretty' } });
+
+# File: backend/src/db.ts
+import { PrismaClient } from '@prisma/client';
+export const prisma = new PrismaClient();
+
+# File: backend/src/middleware/piAuth.ts
+import axios from 'axios';
+import type { NextFunction, Response } from 'express';
+import { config } from '../config.js';
+import type { AuthedRequest } from '../types.js';
+
+// Why: Enforce Pi-only auth by validating user token against Pi API; no JWT issued.
+export async function piAuth(req: AuthedRequest, res: Response, next: NextFunction) {
+  try {
+    const auth = req.header('Authorization');
+    if (!auth || !auth.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Missing Pi auth token' });
+    }
+    const token = auth.slice('Bearer '.length);
+    const me = await axios.get(`${config.pi.baseUrl}/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    // Expect response like { uid, username, ... }
+    req.piUser = { uid: me.data?.uid, username: me.data?.username };
+    if (!req.piUser.uid) return res.status(401).json({ error: 'Invalid Pi token' });
+    next();
+  } catch (err: any) {
+    const code = err?.response?.status || 500;
+    return res.status(code).json({ error: 'Pi auth failed', detail: err?.response?.data || String(err) });
+  }
+}
+
+# File: backend/src/services/piPayments.ts
+import axios from 'axios';
+import { config } from '../config.js';
+import type { PiPaymentArgs } from '../types.js';
+
+const headers = () => ({ Authorization: `Key ${config.pi.apiKey}`, 'Content-Type': 'application/json' });
+
+export async function createPayment(args: PiPaymentArgs): Promise<string> {
+  const { data } = await axios.post(`${config.pi.baseUrl}/payments`, args, { headers: headers() });
+  return data.identifier as string;
+}
+
+export async function submitPayment(paymentId: string, pending_payments = false): Promise<string> {
+  const { data } = await axios.post(`${config.pi.baseUrl}/payments/${paymentId}/submit`, { pending_payments }, { headers: headers() });
+  return data.txid as string;
+}
+
+export async function completePayment(paymentId: string, txid: string) {
+  const { data } = await axios.post(`${config.pi.baseUrl}/payments/${paymentId}/complete`, { txid }, { headers: headers() });
+  return data;
+}
+
+export async function getPayment(paymentId: string) {
+  const { data } = await axios.get(`${config.pi.baseUrl}/payments/${paymentId}`, { headers: headers() });
+  return data;
+}
+
+export async function cancelPayment(paymentId: string) {
+  const { data } = await axios.post(`${config.pi.baseUrl}/payments/${paymentId}/cancel`, {}, { headers: headers() });
+  return data;
+}
+
+export async function getIncompleteServerPayments() {
+  const { data } = await axios.get(`${config.pi.baseUrl}/payments/incomplete_server_payments`, { headers: headers() });
+  return data as any[];
+}
+
+# File: backend/src/routes/products.ts
+import { Router } from 'express';
+import { prisma } from '../db.js';
+import { z } from 'zod';
+import { piAuth } from '../middleware/piAuth.js';
+
+const router = Router();
+
+router.get('/', async (_req, res) => {
+  const products = await prisma.product.findMany({ orderBy: { createdAt: 'desc' } });
+  res.json(products);
+});
+
+router.post('/', piAuth, async (req, res) => {
+  const schema = z.object({ name: z.string().min(2), pricePi: z.number().positive(), imageUrl: z.string().url().optional() });
+  const parsed = schema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json(parsed.error.flatten());
+  const owner = await prisma.user.upsert({
+    where: { uid: req.piUser!.uid },
+    update: {},
+    create: { uid: req.piUser!.uid, username: req.piUser!.username || null }
+  });
+  const product = await prisma.product.create({ data: { ...parsed.data, ownerId: owner.id } });
+  res.status(201).json(product);
+});
+
+export default router;
+
+# File: backend/src/routes/orders.ts
+import { Router } from 'express';
+import { prisma } from '../db.js';
+import { z } from 'zod';
+import { piAuth } from '../middleware/piAuth.js';
+
+const router = Router();
+
+router.get('/my', piAuth, async (req, res) => {
+  const me = await prisma.user.upsert({
+    where: { uid: req.piUser!.uid },
+    update: {},
+    create: { uid: req.piUser!.uid, username: req.piUser!.username || null }
+  });
+  const orders = await prisma.order.findMany({ where: { buyerId: me.id }, include: { product: true }, orderBy: { createdAt: 'desc' } });
+  res.json(orders);
+});
+
+router.post('/', piAuth, async (req, res) => {
+  const schema = z.object({ productId: z.string().uuid() });
+  const parsed = schema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json(parsed.error.flatten());
+  const me = await prisma.user.upsert({
+    where: { uid: req.piUser!.uid },
+    update: {},
+    create: { uid: req.piUser!.uid, username: req.piUser!.username || null }
+  });
+  const product = await prisma.product.findUnique({ where: { id: parsed.data.productId } });
+  if (!product) return res.status(404).json({ error: 'Product not found' });
+  const order = await prisma.order.create({ data: { buyerId: me.id, productId: product.id, status: 'pending' } });
+  res.status(201).json(order);
+});
+
+export default router;
+
+# File: backend/src/routes/payments.ts
+import { Router } from 'express';
+import { z } from 'zod';
+import { prisma } from '../db.js';
+import { piAuth } from '../middleware/piAuth.js';
+import { createPayment, submitPayment, completePayment, getPayment } from '../services/piPayments.js';
+
+const router = Router();
+
+router.post('/create', piAuth, async (req, res) => {
+  const schema = z.object({ orderId: z.string().uuid() });
+  const parsed = schema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json(parsed.error.flatten());
+
+  const order = await prisma.order.findUnique({ where: { id: parsed.data.orderId }, include: { product: true, buyer: true } });
+  if (!order) return res.status(404).json({ error: 'Order not found' });
+  if (order.status !== 'pending') return res.status(400).json({ error: 'Order not pending' });
+
+  const paymentId = await createPayment({
+    amount: order.product.pricePi,
+    memo: `Order ${order.id} - ${order.product.name}`,
+    metadata: { orderId: order.id, productId: order.productId },
+    uid: order.buyer.uid
+  });
+
+  await prisma.order.update({ where: { id: order.id }, data: { paymentId } });
+  res.json({ paymentId });
+});
+
+router.post('/submit', piAuth, async (req, res) => {
+  const schema = z.object({ orderId: z.string().uuid(), pending_payments: z.boolean().optional() });
+  const parsed = schema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json(parsed.error.flatten());
+  const order = await prisma.order.findUnique({ where: { id: parsed.data.orderId } });
+  if (!order?.paymentId) return res.status(400).json({ error: 'Missing paymentId' });
+  const txid = await submitPayment(order.paymentId, parsed.data.pending_payments ?? false);
+  await prisma.order.update({ where: { id: order.id }, data: { txid } });
+  res.json({ txid });
+});
+
+router.post('/complete', piAuth, async (req, res) => {
+  const schema = z.object({ orderId: z.string().uuid() });
+  const parsed = schema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json(parsed.error.flatten());
+  const order = await prisma.order.findUnique({ where: { id: parsed.data.orderId } });
+  if (!order?.paymentId || !order?.txid) return res.status(400).json({ error: 'Missing payment or txid' });
+  const result = await completePayment(order.paymentId, order.txid);
+  await prisma.order.update({ where: { id: order.id }, data: { status: 'completed' } });
+  res.json(result);
+});
+
+router.get('/:paymentId', piAuth, async (req, res) => {
+  const data = await getPayment(req.params.paymentId);
+  res.json(data);
+});
+
+export default router;
+
+# File: backend/src/app.ts
+import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import morgan from 'morgan';
+import { config } from './config.js';
+import products from './routes/products.js';
+import orders from './routes/orders.js';
+import payments from './routes/payments.js';
+
+export function createApp() {
+  const app = express();
+  app.use(helmet());
+  app.use(cors({ origin: config.corsOrigin, credentials: true }));
+  app.use(express.json({ limit: '1mb' }));
+  app.use(morgan('dev'));
+
+  app.get('/health', (_req, res) => res.json({ ok: true }));
+
+  app.use('/api/products', products);
+  app.use('/api/orders', orders);
+  app.use('/api/payments', payments);
+
+  // Error fallback
+  // Why: ensure consistent error shape for unexpected failures
+  app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    res.status(500).json({ error: 'InternalError', detail: err?.message || String(err) });
+  });
+  return app;
+}
+
+# File: backend/src/server.ts
+import { createApp } from './app.js';
+import { config } from './config.js';
+
+const app = createApp();
+app.listen(config.port, () => {
+  // eslint-disable-next-line no-console
+  console.log(`API listening on http://localhost:${config.port}`);
+});
+
+# File: backend/prisma/seed.ts
+import { prisma } from '../src/db.js';
+
+async function main() {
+  const demo = await prisma.user.upsert({ where: { uid: 'demo-user' }, update: {}, create: { uid: 'demo-user', username: 'demo' } });
+  await prisma.product.createMany({
+    data: [
+      { name: 'Pi Hoodie', pricePi: 3.14, ownerId: demo.id, imageUrl: 'https://picsum.photos/seed/hoodie/640/480' },
+      { name: 'Pi Mug', pricePi: 1.59, ownerId: demo.id, imageUrl: 'https://picsum.photos/seed/mug/640/480' }
+    ],
+    skipDuplicates: true
+  });
+}
+
+main().then(() => process.exit(0)).catch((e) => { console.error(e); process.exit(1); });
+
+# File: docker-compose.yml (root)
+version: '3.9'
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: palace
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  api:
+    build: ./backend
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - PI_API_KEY=${PI_API_KEY}
+      - PI_NETWORK=${PI_NETWORK}
+      - PORT=8080
+      - CORS_ORIGIN=${CORS_ORIGIN}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    command: sh -c "npm run db:generate && npm run db:migrate && npm run dev"
+    volumes:
+      - ./backend:/app
+volumes:
+  pgdata:
+
+# File: backend/Dockerfile
+FROM node:20-alpine
+WORKDIR /app
+COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
+RUN npm ci || yarn install || pnpm i
+COPY . .
+RUN npm run build || true
+EXPOSE 8080
+CMD ["npm", "run", "dev"]
+
+# File: backend/.eslintrc.json
+{
+  "env": { "node": true, "es2022": true },
+  "extends": ["eslint:recommended", "plugin:import/recommended", "prettier"],
+  "parserOptions": { "ecmaVersion": 2022, "sourceType": "module" },
+  "rules": { "no-console": "off" }
+}
 
