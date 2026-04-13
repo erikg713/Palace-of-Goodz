@@ -1,17 +1,41 @@
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-import Product from '../models/Product.js'
+// backend/scripts/showProducts.js
 
-dotenv.config()
-mongoose.connect(process.env.MONGO_URI)
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import Product from "../models/Product.js";
 
-async function showAll() {
-  const products = await Product.find()
-  console.log('Current Products:')
-  products.forEach(p => {
-    console.log(`${p.name} - ${p.price}π`)
-  })
-  process.exit()
-}
+dotenv.config();
 
-showAll()
+const showProducts = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+
+    const products = await Product.find()
+      .limit(20)
+      .lean(); // performance optimization
+
+    if (!products.length) {
+      console.log("No products found.");
+      process.exit(0);
+    }
+
+    console.log(`\n📦 Found ${products.length} products:\n`);
+
+    console.table(
+      products.map((p) => ({
+        Name: p.name,
+        Price: `$${p.price}`,
+        SKU: p.sku || "N/A",
+        Active: p.isActive,
+        Created: p.createdAt,
+      }))
+    );
+
+    process.exit(0);
+  } catch (err) {
+    console.error("❌ Error fetching products:", err);
+    process.exit(1);
+  }
+};
+
+showProducts();
