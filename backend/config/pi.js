@@ -4,7 +4,31 @@
  * This file contains configuration related to Pi Network integration
  * (Payments, Authentication, App Server, etc.)
  */
+/**
+ * Pi Network Configuration
+ */
 
+const piConfig = {
+  appId: process.env.PI_APP_ID,
+  apiKey: process.env.PI_API_KEY,
+  baseURL: process.env.PI_BASE_URL || 'https://api.minepi.com',
+  appServerURL: process.env.APP_SERVER_URL || `http://localhost:${process.env.PORT || 5000}`,
+
+  enableAuth: process.env.ENABLE_PI_AUTH !== 'false',
+  enablePayments: process.env.ENABLE_PI_PAYMENTS === 'true',
+
+  adminUids: process.env.PI_ADMIN_UIDS
+    ? process.env.PI_ADMIN_UIDS.split(',').map((uid) => uid.trim())
+    : [],
+
+  payment: {
+    currency: 'PI',
+    minAmount: parseFloat(process.env.PI_MIN_PAYMENT) || 0.1,
+    callbackUrl: `${process.env.APP_SERVER_URL}/api/pi/payment/callback`,
+  },
+};
+
+export default piConfig;
 import dotenv from 'dotenv';
 dotenv.config();
 
