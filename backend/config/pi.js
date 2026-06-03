@@ -5,9 +5,13 @@
  */
 
 import dotenv from 'dotenv';
+import { createAdminChecker, parseAdminUids } from './authHelpers.js';
 
 // Load environment variables (safe to call multiple times)
 dotenv.config();
+
+// Parse admin UIDs once at startup
+const adminUids = parseAdminUids(process.env.PI_ADMIN_UIDS);
 
 const piConfig = {
   // === Core Pi App Credentials ===
@@ -23,9 +27,7 @@ const piConfig = {
   enablePayments: process.env.ENABLE_PI_PAYMENTS === 'true',
 
   // === Admin Access (Pi UIDs) ===
-  adminUids: process.env.PI_ADMIN_UIDS
-    ? process.env.PI_ADMIN_UIDS.split(',').map((uid) => uid.trim()).filter(Boolean)
-    : [],
+  adminUids,
 
   // === Common Headers for Pi API calls ===
   headers: {
@@ -44,10 +46,7 @@ const piConfig = {
   },
 
   // === Helper Methods ===
-  isAdmin: (uid) => {
-    if (!uid) return false;
-    return piConfig.adminUids.includes(uid);
-  },
+  isAdmin: createAdminChecker(adminUids),
 };
 
 export default piConfig;
